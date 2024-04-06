@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Patient;
+use App\Models\Journal;
+use App\Models\JournalEntry;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -16,8 +19,11 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Doctor',
+            'email' => 'doctor@gmail.com',
         ]);
+
+        Patient::factory(1)->create();
+        JournalEntry::factory(15)->create();
     }
 }
