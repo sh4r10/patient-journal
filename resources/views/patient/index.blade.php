@@ -10,5 +10,6 @@
             <a class="w-full bg-white py-4 px-6 rounded shadow-sm hover:shadow-md transition ease-in-out delay-50" href={{route('patients.show', $patient)}}>{{$patient->name}}</a>
             @endforeach
         </div>
+        {{$patients->links('vendor.pagination.tailwind')}}
     </div>
 </x-layout>

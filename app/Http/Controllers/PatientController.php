@@ -62,8 +62,16 @@ class PatientController extends Controller
      */
     public function update(Request $request, Patient $patient)
     {
-        //
-        return 'edit';
+        $data = $request->validate([
+            'name' => ['required', 'string'],
+            'personnummer' => ['required', 'string'],
+            'email' => ['required', 'string'],
+            'phone' => ['required', 'string'],
+        ]);
+
+        $patient->update($data);
+
+        return to_route('patients.show', $patient)->with('message', 'Patient updated successfully');
     }
 
     /**
