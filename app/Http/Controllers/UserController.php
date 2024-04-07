@@ -1,18 +1,40 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\User;
 use Illuminate\Http\Request;
-
+use App\Models\User;
+ 
 class UserController extends Controller
 {
 
-    public function login()
-    {
-        return view('login');
+    public function logout(Request $request)
+    {   
+       $info= $request->validate([
+            'username'=>['required','string'],
+            'password'=> ['required','string']
+
+       ]);
+        auth()->logout();
+        return to_route('welcome');
+       
     }
-    /**
+
+
+    public function login(Request $request)
+    {   
+       $info= $request->validate([
+            'username'=>['required','string'],
+            'password'=> ['required','string']
+
+       ]);
+
+
+        
+        // auth()->login($info);
+        return to_route('patients.index');
+       
+    }
+    /** 
      * Display a listing of the resource.
      */
     public function index()
@@ -25,7 +47,12 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+      
+       $user= User::create([
+            'username'=>'admin',
+            'password'=> bcrypt('12345')
+        ]);
+     
     }
 
     /**

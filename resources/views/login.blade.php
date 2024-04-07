@@ -2,8 +2,9 @@
     <main class="font-sans antialiased h-screen flex justify-center items-center flex-col">
         <div class="max-w-md w-full">
             <h1 class="text-2xl mb-4">Login</h1>
-            <form class="w-full">
-                <label class="form-control w-full">
+            <form method="post" action={{route('users.login')}} class="w-full">
+            @csrf    
+            <label class="form-control w-full">
                     <div class="label">
                         <span class="label-text">Username</span>
                     </div>

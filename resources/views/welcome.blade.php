@@ -16,6 +16,22 @@
         </style>
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50">
+
+    @auth
+     <p>  Congrats you are logged in</p>
+
+     <form method="post" action={{route('users.logout')}} class="w-full">
+        @csrf 
+        <button> Log out</button> 
+     </form>
+    @else 
+    
+  
+    <form method="post" action={{route('users.login')}} class="w-full">
+     @csrf    
+            
+     </form>
+    @endauth
         <div class="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
             <img id="background" class="absolute -left-20 top-0 max-w-[877px]" src="https://laravel.com/assets/img/welcome/background.svg" />
             <div class="relative min-h-screen flex flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white">
