@@ -1,4 +1,4 @@
-<x-layout>
+<x-app-layout>
     <div class="mt-12 max-w-screen-md m-auto">
         <!-- Simplicity is an acquired taste. - Katharine Gerould -->
         <div class="flex justify-start items-center mb-4">
@@ -43,4 +43,4 @@
             </form>
         </div>
     </div>
-</x-layout>
+</x-app-layout>

@@ -16,7 +16,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'username',
+        'name',
+        'email',
         'password',
     ];
 
@@ -25,7 +26,7 @@ class User extends Authenticatable
      *
      * @var string
      */
-    protected $primaryKey = 'username';
+    protected $primaryKey = 'email';
 
     /**
      * Indicates if the model's ID is auto-incrementing.

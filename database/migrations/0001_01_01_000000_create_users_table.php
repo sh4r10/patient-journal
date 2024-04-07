@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-
-            $table->string('username')->unique();
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
             $table->string('password');
+            $table->rememberToken();
             $table->timestamps();
         });
-
- 
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
@@ -39,4 +39,4 @@ return new class extends Migration
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }
-};
+};;

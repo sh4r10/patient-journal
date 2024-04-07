@@ -1,4 +1,4 @@
-<x-layout>
+<x-app-layout>
     <div class="mt-12 max-w-screen-lg m-auto">
         <!-- Nothing worth having comes easy. - Theodore Roosevelt -->
         <div class="flex justify-between items-center">
@@ -12,4 +12,4 @@
         </div>
         {{$patients->links('vendor.pagination.tailwind')}}
     </div>
-</x-layout>
+</x-app-layout>

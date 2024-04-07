@@ -1,4 +1,4 @@
-<x-layout>
+<x-app-layout>
     <div class="mt-12 max-w-screen-md m-auto">
         <!-- Waste no more time arguing what a good man should be, be one. - Marcus Aurelius -->
         <div class="flex justify-between items-center">
@@ -19,4 +19,4 @@
             Entries
         </div>
     </div>
-</x-layout>
+</x-app-layout>
