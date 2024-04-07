@@ -9,8 +9,18 @@
         <div class="flex justify-between items-center">
             <h1 class="text-2xl">{{$patient->name}}</h1>
             <div class="flex gap-2">
-                <a class="btn btn-outline btn-warning" href={{route('patients.edit', $patient)}}>Update</a>
-                <button class="btn btn-error btn-outline" onclick="delete_confirmation.showModal()">Delete</button>
+                <div class="dropdown dropdown-bottom dropdown-end dropdown-hover">
+                    <div tabindex="0" role="button" class="btn btn-ghost">Manage Patient</div>
+                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                        <li>
+                            <a href={{route('patients.edit', $patient)}}>Update</a>
+                        </li>
+                        <li>
+                            <button class="text-red-700" onclick="delete_confirmation.showModal()">Delete</button>
+                        </li>
+                    </ul>
+                </div>
+                <button class="btn btn-primary">New Entry</button>
                 <dialog id="delete_confirmation" class="modal">
                     <div class="modal-box">
                         <h3 class="font-bold text-lg">Confirm password to delete</h3>
@@ -42,8 +52,18 @@
                 </dialog>
             </div>
         </div>
-        <div>
-            Entries
+        <div class="my-10">
+            @foreach($entries as $entry)
+            <div class="w-full bg-white p-6 mb-6 rounded shadow-sm hover:shadow-md transition ease-in-out delay-50">
+                <h2 class="font-semibold text-xl mb-2">{{$entry->title}}</h2>
+                <p>{{$entry->description}}</p>
+                <div class="text-gray-600 font-bold mt-4 flex justify-end gap-4 text-xs">
+                    <p>Created: {{$entry->created_at}}</p>
+                    <p>Updated: {{$entry->updated_at}}</p>
+                </div>
+            </div>
+            @endforeach
+            {{$entries->links('vendor.pagination.tailwind')}}
         </div>
     </div>
 </x-app-layout>

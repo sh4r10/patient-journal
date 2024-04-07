@@ -3,7 +3,7 @@
         <!-- Nothing worth having comes easy. - Theodore Roosevelt -->
         <div class="flex justify-between items-center">
             <h1 class="text-2xl">All Patients</h1>
-            <a href={{route('patients.create')}} class="btn btn-secondary">New Patient</a>
+            <a href={{route('patients.create')}} class="btn btn-primary">New Patient</a>
         </div>
         <div class="flex flex-col mt-4 gap-2">
             @foreach($patients as $patient)

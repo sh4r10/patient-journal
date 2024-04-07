@@ -18,11 +18,11 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'username' => 'Doctor'
-        ]);
-
-        Patient::factory(1)->create();
+        // User::factory()->create([
+        //     'username' => 'Doctor'
+        // ]);
+        //
+        // Patient::factory(1)->create();
         JournalEntry::factory(15)->create();
     }
 }

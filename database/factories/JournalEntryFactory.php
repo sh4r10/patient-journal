@@ -19,7 +19,7 @@ class JournalEntryFactory extends Factory
         return [
             'title' => fake()->realTextBetween(10, 40),
             'description' => fake()->realTextBetween(100, 600),
-            'patient_id' => 1
+            'patient_id' => 8
         ];
     }
 }
