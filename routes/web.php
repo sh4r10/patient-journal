@@ -3,6 +3,10 @@
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FileController;
+
+Route::get('/file-upload', [FileController::class, 'showUploadForm'])->name('file.upload');
+Route::post('/files', [FileController::class, 'store'])->name('file.store');
 
 Route::get('/', function () {
     return view('welcome');
