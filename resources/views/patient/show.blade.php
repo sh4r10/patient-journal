@@ -1,7 +1,9 @@
 <x-app-layout>
     @if ($errors->count() > 0)
     <script>
-        window.onload = () => document.getElementById("delete_confirmation").showModal();
+        window.onload = () => {
+            document.getElementById("delete_confirmation").showModal();
+        }
     </script>
     @endif
     <div class="mt-12 max-w-screen-md m-auto">
@@ -53,10 +55,23 @@
             </div>
         </div>
         <div class="my-10">
+            <dialog id="image_modal" class="modal">
+                <div class="modal-box max-w-screen-xl w-full">
+                    <img id="modal-image" />
+                </div>
+                <form method="dialog" class="modal-backdrop">
+                    <button>close</button>
+                </form>
+            </dialog>
             @foreach($entries as $entry)
             <div class="w-full bg-white p-6 mb-6 rounded shadow-sm hover:shadow-md transition ease-in-out delay-50">
                 <h2 class="font-semibold text-xl mb-2">{{$entry->title}}</h2>
                 <p>{{$entry->description}}</p>
+                <div class="w-full flex flex-row justify-start items-center gap-4 mt-6">
+                    @foreach($entry->files as $file)
+                    <img onclick="(()=>{document.getElementById('modal-image').src='{{'/'.$file->path}}'; image_modal.showModal();})()" src="{{'/'.$file->path}}" class="w-24 h-24 rounded object-cover cursor-pointer" alt="Tailwind CSS Carousel component" />
+                    @endforeach
+                </div>
                 <div class="text-gray-600 font-bold mt-4 flex justify-end gap-4 text-xs">
                     <p>Created: {{$entry->created_at}}</p>
                     <p>Updated: {{$entry->updated_at}}</p>

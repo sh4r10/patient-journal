@@ -12,11 +12,13 @@ class JournalEntry extends Model
 
     protected $fillable = ['title', 'description', 'patient_id'];
 
-    public function patient() {
+    public function patient()
+    {
         return $this->belongsTo(Patient::class);
     }
 
-    public function files() {
+    public function files()
+    {
         return $this->hasMany(File::class);
     }
 }

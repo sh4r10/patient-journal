@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('patients', PatientController::class);
     Route::resource('entries', JournalEntryController::class, ['only' => ['store', 'edit', 'update', 'destroy']]);
     Route::get('/entries/create/{patient}', [JournalEntryController::class, 'create'])->name('entries.create');
+    Route::get('/uploads/{filename}', [FileController::class, 'show'])->name('files.show');
 });
 
 
