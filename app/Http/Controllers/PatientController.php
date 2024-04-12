@@ -49,7 +49,8 @@ class PatientController extends Controller
      */
     public function show(Patient $patient)
     {
-        $entries = JournalEntry::where('patient_id', $patient->id)->orderBy('created_at', 'desc')->paginate(10);
+        $entries = JournalEntry::with('files')->where('patient_id', $patient->id)->orderBy('created_at', 'desc')->paginate(10);
+
         return view('patient.show', ['patient' => $patient, 'entries' => $entries]);
     }
 

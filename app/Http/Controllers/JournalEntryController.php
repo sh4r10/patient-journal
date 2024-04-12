@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\File;
 use App\Models\JournalEntry;
 use App\Models\Patient;
 use Illuminate\Http\Request;
@@ -33,7 +34,7 @@ class JournalEntryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'files[]' => 'mimes:png,jpeg',
+            'files[]' => 'nullable|mimes:png,jpeg',
             'title' => ['required', 'string'],
             'description' => ['required', 'string'],
             'patient_id' => ['required', 'string']
@@ -41,14 +42,28 @@ class JournalEntryController extends Controller
 
         $patient = Patient::where('id', $request->patient_id)->first();
 
+        $journal_entry = JournalEntry::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'patient_id' => $request->patient_id,
+        ]);
+
         if ($request->hasFile('files')) {
             foreach ($request->file('files') as $file) {
-                $filename = Uuid::uuid4() . '.' . $file->getClientOriginalExtension();
-                Storage::disk('local')->put('uploads' . '/' . $filename, file_get_contents($file), 'public');
+                $id = Uuid::uuid4();
+                $filename = $id . '.' . $file->getClientOriginalExtension();
+                $path = '/uploads' . '/' . $filename;
+                Storage::disk('local')->put($path, file_get_contents($file), 'public');
+                File::create([
+                    'id' => $id,
+                    'path' => $path,
+                    'mime' => $file->getClientMimeType(),
+                    'journal_entry_id' => $journal_entry->id
+                ]);
             }
             return to_route('patients.show', $patient);
         }
-        return view('patient.index');
+        return to_route('patients.show', $patient);
     }
 
     /**

@@ -47,4 +47,17 @@ class FileController extends Controller
 
         return back()->with('message', 'File uploaded successfully.'); // Redirect back with a success message
     }
+
+    public function show(string $filename)
+    {
+        $path = 'uploads/' . $filename;
+        $file = File::where('path', $path)->firstOrFail();
+        if (!Storage::disk('local')->exists($path)) {
+            abort(404);
+        }
+
+        $fileContent = Storage::disk('local')->get($path);
+
+        return response($fileContent, 200)->header('Content-Type', $file->mime);
+    }
 }
