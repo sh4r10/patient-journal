@@ -20,7 +20,7 @@
                         </li>
                     </ul>
                 </div>
-                <button class="btn btn-primary">New Entry</button>
+                <a href="{{route('entries.create', $patient)}}" class="btn btn-primary">New Entry</a>
                 <dialog id="delete_confirmation" class="modal">
                     <div class="modal-box">
                         <h3 class="font-bold text-lg">Confirm password to delete</h3>

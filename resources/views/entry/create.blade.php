@@ -5,26 +5,34 @@
             <h1 class="text-2xl">Create Entry for {{$patient->name}}</h1>
         </div>
         <div>
-            <form action={{route('patients.store')}} method="POST" class="w-full">
+            <form action={{route('entries.store')}} method="POST" class="w-full" enctype="multipart/form-data">
+                <input type="hidden" name="patient_id" value="{{$patient->id}}" />
                 @csrf
                 <label class="form-control w-full">
                     <div class="label">
                         <span class="label-text">Name</span>
                     </div>
-                    <input type="text" name="name" placeholder="Patient Name" class="input input-bordered w-full" />
-                </label>
+                    <input type="text" name="name" value="{{$patient->name}}" disabled class="input input-disabled input-bordered w-full" required />
+                </label enctypemultipart/form-data>
                 <label class="form-control w-full">
                     <div class="label">
                         <span class="label-text">Personnummer</span>
                     </div>
-                    <input type="text" name="personnummer" placeholder="020112-XXXX" class="input input-bordered w-full" />
+                    <input type="text" name="personnummer" value="{{$patient->personnummer}}" disabled class="input-disabled input input-bordered w-full" required />
                 </label>
                 <label class="form-control w-full">
                     <div class="label">
-                        <span class="label-text">Email</span>
+                        <span class="label-text">Title</span>
                     </div>
-                    <input type="text" name="email" placeholder="patient@dr.com" class="input input-bordered w-full" />
+                    <input type="text" name="title" placeholder="Entry Title" autofocus class="input input-bordered w-full" required />
                 </label>
+                <label class="form-control">
+                    <div class="label">
+                        <span class="label-text">Entry Description</span>
+                    </div>
+                    <textarea class="textarea textarea-bordered h-48" placeholder="Description" name="description" required></textarea>
+                </label>
+                <input type="file" name="files[]" class="mt-4 file-input file-input-bordered file-input-md w-full" multiple />
                 <div class="w-full flex flex-row-reverse justify-start items-center gap-4 mt-4">
                     <button class="btn btn-wide btn-primary">Create</button>
                     <a class="btn btn-ghost" href={{route('patients.index')}}>Cancel</a>
