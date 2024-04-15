@@ -52,7 +52,7 @@ class JournalEntryController extends Controller
             foreach ($request->file('files') as $file) {
                 $id = Uuid::uuid4();
                 $filename = $id . '.' . $file->getClientOriginalExtension();
-                $path = '/uploads' . '/' . $filename;
+                $path = 'uploads' . '/' . $filename;
                 Storage::disk('local')->put($path, file_get_contents($file), 'public');
                 File::create([
                     'id' => $id,
