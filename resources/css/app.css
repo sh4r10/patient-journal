@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.btn-orange {
+    background-color: orange;
+    /* Add any other styles as needed */
+}
+
+.btn-red {
+    background-color: red;
+    /* Add any other styles as needed */
+}
