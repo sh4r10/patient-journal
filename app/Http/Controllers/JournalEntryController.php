@@ -77,28 +77,50 @@ class JournalEntryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(JournalEntry $journalEntry)
+    public function edit(Request $request, string $entryID)
     {
-        return view('entry.edit', ['journalEntry' => $journalEntry]);
+        $journalEntry = JournalEntry::findOrFail($entryID);
+        $patient = Patient::findOrFail($journalEntry->patient_id);
+        return view('entry.edit', ['patient' => $patient, 'journalEntry' => $journalEntry]);
     }
-    
+
 
     /**
      * Update the specified resource in storage.
      */
 
-public function update(Request $request, JournalEntry $journalEntry)
-{
-    $validatedData = $request->validate([
-        'title' => 'required|string|max:255',
-        'description' => 'required|string|max:65535',
-    ]);
+    public function update(Request $request, string $entryID)
+    {
+        $request->validate([
+            'files[]' => 'nullable|mimes:png,jpeg',
+            'title' => ['required', 'string'],
+            'description' => ['required', 'string'],
+            'patient_id' => ['required', 'string']
+        ]);
 
-    $journalEntry->update($validatedData);
+        $journal_entry = JournalEntry::findOrFail($entryID);
+        $patient = Patient::findOrFail($journal_entry->patient_id);
 
-    // Redirect to the patient's show page instead of the entries index
-    return redirect()->route('patients.show', $journalEntry->patient_id)->with('message', 'Entry updated successfully');
-}
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $id = Uuid::uuid4();
+                $filename = $id . '.' . $file->getClientOriginalExtension();
+                $path = 'uploads' . '/' . $filename;
+                Storage::disk('local')->put($path, file_get_contents($file), 'public');
+                File::create([
+                    'id' => $id,
+                    'path' => $path,
+                    'mime' => $file->getClientMimeType(),
+                    'journal_entry_id' => $journal_entry->id
+                ]);
+            }
+            return to_route('patients.show', $patient);
+        }
+
+        $journal_entry->update(['title' => $request->title, 'description' => $request->description]);
+        // Redirect to the patient's show page instead of the entries index
+        return to_route('patients.show', $patient)->with('message', 'Entry updated successfully');
+    }
 
 
     /**
@@ -115,6 +137,4 @@ public function update(Request $request, JournalEntry $journalEntry)
             return back()->with('error', 'Error deleting entry: ' . $e->getMessage());
         }
     }
-    
-
 }
