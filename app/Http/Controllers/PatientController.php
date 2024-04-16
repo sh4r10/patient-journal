@@ -49,7 +49,7 @@ class PatientController extends Controller
      */
     public function show(Patient $patient)
     {
-        $entries = JournalEntry::with('files')->where('patient_id', $patient->id)->orderBy('created_at', 'desc')->paginate(10);
+        $entries = JournalEntry::with('files')->where('patient_id', $patient->id)->orderBy('created_at', 'desc')->paginate(5);
 
         return view('patient.show', ['patient' => $patient, 'entries' => $entries]);
     }
@@ -84,6 +84,7 @@ class PatientController extends Controller
      */
     public function destroy(Request $request, string $id)
     {
+        // Validate the user's password
         if (!Auth::guard('web')->validate([
             'email' => $request->user()->email,
             'password' => $request->password,
@@ -93,8 +94,16 @@ class PatientController extends Controller
             ]);
         }
 
-        $patient = Patient::find($id);
+        // Find the patient by ID
+        $patient = Patient::findOrFail($id);
+
+        // Delete related records first (if necessary)
+        // Example: $patient->appointments()->delete();
+
+        // Delete the patient
         $patient->delete();
-        return to_route('patients.index');
+
+        // Redirect back to patients index page
+        return redirect()->route('patients.index')->with('message', 'Patient deleted successfully');
     }
 }

@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="mt-12 max-w-screen-md m-auto">
-        <!-- Simplicity is an acquired taste. - Katharine Gerould -->
+        <!-- Simplicity is an acquired taste. - Katharine Gerould  I keep teeling u but u r stubborn   -->
         <div class="flex justify-start items-center mb-4">
             <h1 class="text-2xl">Create Entry for {{$patient->name}}</h1>
         </div>

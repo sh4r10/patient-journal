@@ -1,13 +1,5 @@
 <x-app-layout>
-    @if ($errors->count() > 0)
-    <script>
-        window.onload = () => {
-            document.getElementById("delete_confirmation").showModal();
-        }
-    </script>
-    @endif
     <div class="mt-12 max-w-screen-md m-auto">
-        <!-- Waste no more time arguing what a good man should be, be one. - Marcus Aurelius -->
         <div class="flex justify-between items-center">
             <h1 class="text-2xl">{{$patient->name}}</h1>
             <div class="flex gap-2">
@@ -52,25 +44,24 @@
                         <button>close</button>
                     </form>
                 </dialog>
+
             </div>
         </div>
         <div class="my-10">
-            <dialog id="image_modal" class="modal">
-                <div class="modal-box max-w-screen-xl w-full">
-                    <img id="modal-image" />
-                </div>
-                <form method="dialog" class="modal-backdrop">
-                    <button>close</button>
-                </form>
-            </dialog>
             @foreach($entries as $entry)
             <div class="w-full bg-white p-6 mb-6 rounded shadow-sm hover:shadow-md transition ease-in-out delay-50">
                 <h2 class="font-semibold text-xl mb-2">{{$entry->title}}</h2>
                 <p>{{$entry->description}}</p>
-                <div class="w-full flex flex-row justify-start items-center gap-4 mt-6">
-                    @foreach($entry->files as $file)
-                    <img onclick="(()=>{document.getElementById('modal-image').src='{{'/'.$file->path}}'; image_modal.showModal();})()" src="{{'/'.$file->path}}" class="w-24 h-24 rounded object-cover cursor-pointer" alt="Tailwind CSS Carousel component" />
-                    @endforeach
+                <div class="flex justify-between items-center">
+                    <div class="flex gap-4">
+                        @foreach($entry->files as $file)
+                        <img onclick="(()=>{document.getElementById('modal-image').src='{{'/'.$file->path}}'; image_modal.showModal();})()" src="{{'/'.$file->path}}" class="w-24 h-24 rounded object-cover cursor-pointer" alt="Image" />
+                        @endforeach
+                    </div>
+                    <div>
+                        <a href="{{ route('entries.edit', $entry) }}" class="btn btn-sm btn-blue">Edit</a>
+                        <button onclick="confirmDelete('{{ $entry->id }}')" class="btn btn-sm btn-red">Delete</button>
+                    </div>
                 </div>
                 <div class="text-gray-600 font-bold mt-4 flex justify-end gap-4 text-xs">
                     <p>Created: {{$entry->created_at}}</p>
@@ -81,4 +72,31 @@
             {{$entries->links('vendor.pagination.tailwind')}}
         </div>
     </div>
+
+    <!-- Delete Confirmation Dialog -->
+    <dialog id="deleteDialog" class="modal">
+        <form method="post" class="modal-box">
+            @csrf
+            @method('DELETE')
+            <h3 class="font-bold text-lg">Are you sure you want to delete this entry?</h3>
+            <div class="modal-action">
+                <button type="submit" class="btn btn-error">Delete</button>
+                <button type="button" onclick="closeDialog()" class="btn">Cancel</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script>
+        function confirmDelete(entryId) {
+            const form = document.querySelector('#deleteDialog form');
+            form.action = `/entries/delete/${entryId}`;
+            const dialog = document.getElementById('deleteDialog');
+            dialog.showModal();
+        }
+
+        function closeDialog() {
+            const dialog = document.getElementById('deleteDialog');
+            dialog.close();
+        }
+    </script>
 </x-app-layout>

@@ -79,22 +79,42 @@ class JournalEntryController extends Controller
      */
     public function edit(JournalEntry $journalEntry)
     {
-        //
+        return view('entry.edit', ['journalEntry' => $journalEntry]);
     }
+    
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, JournalEntry $journalEntry)
-    {
-        //
-    }
+
+public function update(Request $request, JournalEntry $journalEntry)
+{
+    $validatedData = $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'required|string|max:65535',
+    ]);
+
+    $journalEntry->update($validatedData);
+
+    // Redirect to the patient's show page instead of the entries index
+    return redirect()->route('patients.show', $journalEntry->patient_id)->with('message', 'Entry updated successfully');
+}
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(JournalEntry $journalEntry)
     {
-        //
+        try {
+            // Attempt to delete the journal entry
+            $journalEntry->delete();
+            return redirect()->route('entries.index')->with('message', 'Entry deleted successfully');
+        } catch (\Exception $e) {
+            // If there's an exception, redirect back with an error message
+            return back()->with('error', 'Error deleting entry: ' . $e->getMessage());
+        }
     }
+    
+
 }
