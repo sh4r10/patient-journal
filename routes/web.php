@@ -7,7 +7,7 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\JournalEntryController;
 
 
-
+/*
 Route::get('/file-upload', [FileController::class, 'showUploadForm'])->name('file.upload');
 Route::post('/file-upload', [FileController::class, 'store'])->name('file.store');
 
@@ -38,7 +38,7 @@ Route::middleware('auth')->group(function () {
 });
 
 
-
+*/
 
 
 
