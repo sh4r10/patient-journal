@@ -56,9 +56,9 @@
                     <div class="flex gap-4">
                         @foreach($entry->files as $file)
                         @if(strpos($file->mime, 'video') !== false)
-                        <video controls onclick="(() => {document.getElementById('modal-video').src='{{'/'.$file->path}}'; video_modal.showModal();})()" class="w-24 h-24 rounded object-cover cursor-pointer">
+                        <video onclick="(()=>{var video = document.getElementById('modal-video');video.innerHTML='';var source = document.createElement('source');source.setAttribute('src', '{{'/'.$file->path}}');source.setAttribute('type', '{{$file->mime}}');video.appendChild(source);video_modal.showModal();})()" class="w-24 h-24 rounded object-cover cursor-pointer">
                             <source src="{{'/'.$file->path}}" type="{{$file->mime}}">
-                                Your browser does not support the video tag.
+                            Your browser does not support the video tag.
                         </video>
                         @else
                         <img onclick="(() => {document.getElementById('modal-image').src='{{'/'.$file->path}}'; image_modal.showModal();})()" src="{{'/'.$file->path}}" class="w-24 h-24 rounded object-cover cursor-pointer" alt="Image" />
@@ -66,9 +66,9 @@
                         @endforeach
                     </div>
                     <div class="space-x-2">
-    <a href="{{ route('entries.edit', $entry) }}" class="btn btn-sm btn-orange">Update</a>
-    <button onclick="confirmDelete('{{ $entry->id }}')" class="btn btn-sm btn-red">Delete</button>
-</div>
+                        <a href="{{ route('entries.edit', $entry) }}" class="btn btn-sm btn-orange">Update</a>
+                        <button onclick="confirmDelete('{{ $entry->id }}')" class="btn btn-sm btn-red">Delete</button>
+                    </div>
 
                 </div>
                 <div class="text-gray-600 font-bold mt-4 flex justify-end gap-4 text-xs">
@@ -97,7 +97,7 @@
     <!-- Video Modal -->
     <dialog id="video_modal" class="modal">
         <div class="modal-box max-w-screen-xl w-full">
-            <video id="modal-video" controls>
+            <video id="modal-video" class="w-full aspect-video" controls>
                 Your browser does not support the video tag.
             </video>
         </div>
