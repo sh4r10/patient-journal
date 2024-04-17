@@ -1,10 +1,17 @@
 <x-app-layout>
     <div class="mt-12 max-w-screen-md m-auto">
         <div class="flex justify-between items-center">
-            <h1 class="text-2xl">{{$patient->name}}</h1>
+        <h1 class="text-2xl font-bold">{{$patient->name}}</h1>
+                <p class="text-sm font-semibold text-gray-600">SSN: {{$patient->personnummer}}</p>
+                <p class="text-sm font-semibold text-gray-600">Email: {{$patient->email}}</p>
+                <p class="text-sm font-semibold text-gray-600">Phone: {{$patient->phone}}</p>
             <div class="flex gap-2">
                 <div class="dropdown dropdown-bottom dropdown-end dropdown-hover">
-                    <div tabindex="0" role="button" class="btn btn-ghost">Manage Patient</div>
+                <div tabindex="0" role="button" class="btn btn-ghost border border-gray-300 text-black bg-blue-500 hover:bg-blue-700 focus:bg-blue-700 
+                focus:text-gray hover:border-blue-700 focus:outline-none focus:border-blue-700">Manage Patient</div>
+
+
+
                     <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                         <li>
                             <a href={{route('patients.edit', $patient)}}>Update</a>

@@ -13,11 +13,27 @@ class PatientController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $patients = Patient::query()->orderBy('created_at', 'desc')->paginate(10);
-        return view('patient.index', ['patients' => $patients]);
-    }
+    public function index(Request $request)
+{
+    
+    $search = $request->input('search');
+
+    // Query the patients table
+    $patients = Patient::query()
+        ->when($search, function ($query) use ($search) {
+            // This block only executes if there is a valid search input
+            $query->where('name', 'like', "%{$search}%")
+                  ->orWhere('personnummer', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%");
+        })
+        ->orderBy('created_at', 'desc')    // This applies to all cases, ensuring results are always ordered
+        ->paginate(10);  
+   
+    return view('patient.index', ['patients' => $patients]);
+}
+
+
 
     /**
      * Show the form for creating a new resource.
