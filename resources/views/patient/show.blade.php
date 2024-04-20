@@ -1,11 +1,12 @@
+@vite(['resources/js/display-dates.js'])
 <x-app-layout>
     <div class="w-full">
-        <div class="md:flex hidden top-1/2 fixed right-0 mr-24 flex flex-col gap-4 items-center text-lg bg-white p-12 rounded-lg shadow-sm hover:shadow-md transition ease-in-out delay-50" style="transform: translateY(-50%)">
+        <div class="md:flex hidden top-1/2 fixed right-0 mr-24 flex flex-col gap-4 items-center text-base bg-white p-12 rounded-lg shadow-sm hover:shadow-md transition ease-in-out delay-50" style="transform: translateY(-50%)">
             <img class="rounded-full w-32" src="https://ui-avatars.com/api/?name={{$patient->name}}&size=128&background=58b177&rounded=true&format=svg" alt="profile-picture">
             <h1 class="text-2xl font-bold">{{$patient->name}}</h1>
-            <p class="font-semibold text-gray-600">{{$patient->personnummer}}</p>
-            <a class="font-semibold text-blue-500 hover:underline" href="mailto:{{$patient->email}}">{{$patient->email}}</a>
-            <a class="font-semibold text-blue-500 hover:underline" href="tel:{{$patient->phone}}">{{$patient->phone}}</a>
+            <p class="text-gray-600">{{$patient->personnummer}}</p>
+            <a class="text-blue-500 hover:underline" href="mailto:{{$patient->email}}">{{$patient->email}}</a>
+            <a class="text-blue-500 hover:underline" href="tel:{{$patient->phone}}">{{$patient->phone}}</a>
             <div class="dropdown dropdown-bottom dropdown-end dropdown-hover">
                 <div tabindex="0" role="button" class="btn btn-wide btn-neutral">Manage Patient</div>
                 <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
@@ -60,9 +61,9 @@
                         <img class="rounded-full w-32" src="https://ui-avatars.com/api/?name={{$patient->name}}&size=128&background=58b177&rounded=true&format=svg" alt="profile-picture">
                         <div class="flex flex-col">
                             <h1 class=" text-2xl font-bold">{{$patient->name}}</h1>
-                            <p class="font-semibold text-gray-600">{{$patient->personnummer}}</p>
-                            <a class="font-semibold text-blue-500 hover:underline" href="mailto:{{$patient->email}}">{{$patient->email}}</a>
-                            <a class="font-semibold text-blue-500 hover:underline" href="tel:{{$patient->phone}}">{{$patient->phone}}</a>
+                            <p class="text-gray-600">{{$patient->personnummer}}</p>
+                            <a class="text-blue-500 hover:underline" href="mailto:{{$patient->email}}">{{$patient->email}}</a>
+                            <a class="text-blue-500 hover:underline" href="tel:{{$patient->phone}}">{{$patient->phone}}</a>
                         </div>
                     </div>
                     <div class="dropdown dropdown-bottom dropdown-end dropdown-hover w-full">
@@ -97,14 +98,14 @@
                             @endforeach
                         </div>
                         <div class="space-x-2">
-                            <a href="{{ route('entries.edit', $entry) }}" class="btn btn-sm btn-orange">Update</a>
-                            <button onclick="confirmDelete('{{ $entry->id }}')" class="btn btn-sm btn-red">Delete</button>
+                            <a href="{{ route('entries.edit', $entry) }}" class="btn btn-sm btn-outline btn-warning">Update</a>
+                            <button onclick="confirmDelete('{{ $entry->id }}')" class="btn btn-sm btn-outline btn-error">Delete</button>
                         </div>
 
                     </div>
                     <div class="text-gray-600 font-bold mt-4 flex justify-end gap-4 text-xs">
-                        <p>Created: {{$entry->created_at}}</p>
-                        <p>Updated: {{$entry->updated_at}}</p>
+                        <p class="format-date" data-date="{{$entry->updated_at}}">Updated </p>
+                        <p class="format-date" data-date="{{$entry->created_at}}">Created </p>
                     </div>
                 </div>
                 @endforeach

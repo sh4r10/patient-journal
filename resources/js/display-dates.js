@@ -11,7 +11,7 @@ window.onload = function () {
         const formatted = formatDistanceToNow(date, {
             addSuffix: true,
         });
-        el.textContent = formatted;
+        el.textContent += formatted;
         el.setAttribute("title", title);
     }
 };
