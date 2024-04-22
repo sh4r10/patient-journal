@@ -36,7 +36,7 @@
                 <input type="file" name="files[]" class="mt-4 file-input file-input-bordered file-input-md w-full" multiple />
                 <div class="w-full flex flex-row-reverse justify-start items-center gap-4 mt-4">
                     <button class="btn btn-wide btn-primary">Update</button>
-                    <a class="btn btn-ghost" href={{route('patients.index')}}>Cancel</a>
+                    <a class="btn btn-ghost" href="{{ route('patients.show', $patient) }}">Cancel</a>
                 </div>
             </form>
         </div>

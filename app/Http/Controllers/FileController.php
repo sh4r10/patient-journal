@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 
-
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\File;
 use App\Models\JournalEntry;
@@ -47,6 +47,26 @@ class FileController extends Controller
 
         return back()->with('message', 'File uploaded successfully.'); // Redirect back with a success message
     }
+
+
+    public function destroy($id)
+    {
+        try {
+            $file = File::findOrFail($id);
+            Storage::disk('local')->delete($file->path);  // Ensure the file is deleted from storage
+            $file->delete();  // Delete the file record from the database
+
+            return redirect()->back()->with('success', 'File deleted successfully.');
+        } catch (\Exception $e) {
+            // Log the error internally
+            Log::error('Error deleting file: '.$e->getMessage());
+
+            // Redirect back with an error message if there is an exception
+            return back()->with('error', 'Error deleting file: ' . $e->getMessage());
+        }
+    }
+
+
 
     public function show(string $filename)
     {
