@@ -11,7 +11,7 @@ class JournalEntry extends Model
     use HasFactory,SoftDeletes; //  SoftDeletes trait;
 
     protected $fillable = ['title', 'description', 'patient_id'];
-
+    protected $dates = ['deleted_at'];
 
 
     protected static function booted() {

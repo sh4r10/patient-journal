@@ -8,7 +8,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Patient extends Model
 {
     use HasFactory ,SoftDeletes; //  SoftDeletes trait
+    protected $dates = ['deleted_at'];
     protected $fillable = [
         'name', 'personnummer', 'email', 'phone'
     ];
+
+   
+        
+    
+        public function journalEntries() {
+            return $this->hasMany(JournalEntry::class);
+        }
+    
+    
 }

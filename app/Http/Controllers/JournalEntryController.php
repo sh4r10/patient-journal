@@ -6,6 +6,7 @@ use App\Models\File;
 use App\Models\JournalEntry;
 use App\Models\Patient;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
 
@@ -130,17 +131,27 @@ class JournalEntryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(JournalEntry $journalEntry)
+    public function destroy($id) // Temporarily use $id instead of type-hinted model
     {
+        Log::info('Path being accessed', ['path' => request()->path()]);
+        Log::info('ID Received for Deletion: ', ['id' => $id]);
+    
+        $journalEntry = JournalEntry::find($id);
+        if (!$journalEntry) {
+            Log::error("Entry not found with ID: $id");
+            return back()->with('error', 'Entry not found');
+        }
+    
         try {
-            // Attempt to delete the journal entry
             $journalEntry->delete();
-            return redirect()->route('entries.index')->with('message', 'Entry deleted successfully');
+            return redirect()->back()->with('message', 'Entry deleted successfully');
+
         } catch (\Exception $e) {
-            // If there's an exception, redirect back with an error message
+            Log::error('Error deleting entry: ' . $e->getMessage());
             return back()->with('error', 'Error deleting entry: ' . $e->getMessage());
         }
     }
+    
 
 // Method to show deleted entries for a patient
 public function showDeleted($patientID)

@@ -6,6 +6,8 @@ use App\Models\JournalEntry;
 use App\Models\Patient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 use Illuminate\Validation\ValidationException;
 
 class PatientController extends Controller
@@ -113,14 +115,13 @@ class PatientController extends Controller
         // Find the patient by ID
         $patient = Patient::findOrFail($id);
 
-        // Delete related records first (if necessary)
-        // Example: $patient->appointments()->delete();
-
-        // Delete the patient
-        $patient->delete();
-
-        // Redirect back to patients index page
-        return redirect()->route('patients.index')->with('message', 'Patient deleted successfully');
+        try {
+            // Soft delete the patient, which should cascade to entries and files
+            $patient->delete();  // This should trigger soft deletion of entries
+            return redirect()->route('patients.index')->with('message', 'Patient deleted successfully');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error deleting patient: ' . $e->getMessage());
+        }
     }
 
 
