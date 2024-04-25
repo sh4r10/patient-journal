@@ -121,8 +121,16 @@
                             @endforeach
                         </div>
                         <div class="space-x-2">
+                            <!-- Debug: Show Entry ID -->
+                            <div>Entry ID: {{ $entry->id }}</div>
+
                             <a href="{{ route('entries.edit', $entry) }}" class="btn btn-sm btn-outline btn-warning">Update</a>
-                            <button onclick="confirmDelete('{{ $entry->id }}')" class="btn btn-sm btn-outline btn-error">Delete</button>
+                            <form action="{{ route('entries.destroy', $entry->id) }}" method="POST" onsubmit="return confirm('Are you sure?');">
+                                 @csrf
+                                     @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-outline btn-error">Delete</button>
+                            </form>
+
                         </div>
 
                     </div>
