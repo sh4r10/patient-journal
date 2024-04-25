@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
@@ -21,6 +22,11 @@ class User extends Authenticatable
         'password',
     ];
 
+    public function isAdmin()
+    {
+        // Define the logic to check if the user is an admin
+        return $this->role === 'admin'; // Example: Assuming there's a 'role' column in the users table
+    }
     /**
      * The primary key associated with the table.
      *

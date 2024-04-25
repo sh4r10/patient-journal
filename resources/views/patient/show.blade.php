@@ -1,5 +1,28 @@
 @vite(['resources/js/display-dates.js'])
 <x-app-layout>
+
+
+@section('content')
+<div>
+    <h1>Patient: {{ $patient->name }}</h1>
+    <p>Email: {{ $patient->email }}</p>
+    <p>Phone: {{ $patient->phone }}</p>
+
+    <!-- Display a button/link for admins to view deleted entries -->
+    @if(auth()->user()->isAdmin())
+        <a href="{{ route('entries.deleted', $patient->id) }}" class="btn btn-warning">View Deleted Entries</a>
+    @endif
+
+    <ul>
+        @foreach($entries as $entry)
+            <li>{{ $entry->title }} - {{ $entry->description }}</li>
+        @endforeach
+    </ul>
+    {{ $entries->links() }}
+</div>
+@endsection
+
+
     <div class="w-full">
         <div class="md:flex hidden top-1/2 fixed right-0 mr-24 flex flex-col gap-4 items-center text-base bg-white p-12 rounded-lg shadow-sm hover:shadow-md transition ease-in-out delay-50" style="transform: translateY(-50%)">
             <img class="rounded-full w-32" src="https://ui-avatars.com/api/?name={{$patient->name}}&size=128&background=58b177&rounded=true&format=svg" alt="profile-picture">

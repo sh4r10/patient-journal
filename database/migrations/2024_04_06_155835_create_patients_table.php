@@ -18,14 +18,18 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone');
             $table->timestamps();
+            $table->softDeletes();      //  Adds 'deleted_at' column
         });
+       
     }
+
+    
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
-    {
-        Schema::dropIfExists('patients');
+    { 
+        Schema::dropIfExists('journal_entries');
     }
 };

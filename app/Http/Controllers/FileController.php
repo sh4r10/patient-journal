@@ -64,6 +64,8 @@ class FileController extends Controller
             // Redirect back with an error message if there is an exception
             return back()->with('error', 'Error deleting file: ' . $e->getMessage());
         }
+
+        
     }
 
 
@@ -80,4 +82,13 @@ class FileController extends Controller
 
         return response($fileContent, 200)->header('Content-Type', $file->mime);
     }
+
+    public function restoreFile($id)
+{
+    $file = File::onlyTrashed()->findOrFail($id);
+    $file->restore();
+    return back()->with('success', 'File restored successfully.');
+}
+
+
 }

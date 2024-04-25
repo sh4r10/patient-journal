@@ -26,6 +26,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/entries/create/{patient}', [JournalEntryController::class, 'create'])->name('entries.create');
     Route::get('/uploads/{filename}', [FileController::class, 'show'])->name('files.show');
     Route::delete('/files/{file}', [FileController::class, 'destroy'])->name('files.destroy'); 
+
+    Route::get('/patients/{patient}/deleted-entries', [PatientController::class, 'showDeletedEntries'])
+    ->name('patients.deleted.entries')
+    ->middleware('auth');
+
+
+    Route::get('/patients/deleted', [PatientController::class, 'showDeleted'])->name('patients.deleted')->middleware('auth');
+    Route::post('/patients/restore/{id}', [PatientController::class, 'restore'])->name('patients.restore')->middleware('auth');
+
+    Route::get('entries/deleted', [JournalEntryController::class, 'showDeleted'])->name('entries.deleted')->middleware('auth');;
+    Route::post('entries/restore/{id}', [JournalEntryController::class, 'restore'])->name('entries.restore')->middleware('auth');;
 });
 
 
@@ -36,6 +47,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/logout', [UserController::class, 'logout'])->name('users.logout');
+
 });
 
 require __DIR__ . '/auth.php';
