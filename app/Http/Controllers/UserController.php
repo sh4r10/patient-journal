@@ -15,7 +15,12 @@ class UserController extends Controller
 
        ]);
         auth()->logout();
-        return to_route('login');
+        // Invalidate the session.
+    $request->session()->invalidate();
+
+    // Regenerate the session token.
+    $request->session()->regenerateToken();
+        return to_route('auth.login');
        
     }
 

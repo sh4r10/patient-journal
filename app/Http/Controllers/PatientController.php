@@ -15,24 +15,24 @@ class PatientController extends Controller
      */
     public function index(Request $request)
     {
-
         $search = $request->input('search');
+        $query = Patient::query();
 
-        // Query the patients table
-        $patients = Patient::query()
-            ->when($search, function ($query) use ($search) {
-                // This block only executes if there is a valid search input
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('personnummer', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('phone', 'like', "%{$search}%");
-            })
-            ->orderBy('created_at', 'desc')    // This applies to all cases, ensuring results are always ordered
-            ->paginate(10);
-
+       //Include Soft-Deleted Patients for Admins
+       /* if (auth()->user()->isAdmin()) {
+            $query->withTrashed();
+        }*/
+    
+        $patients = $query->when($search, function ($query) use ($search) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('personnummer', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%")
+                ->orWhere('phone', 'like', "%{$search}%");
+        })->orderBy('created_at', 'desc')->paginate(10);
+    
         return view('patient.index', ['patients' => $patients]);
     }
-
+    
 
 
     /**
@@ -122,4 +122,40 @@ class PatientController extends Controller
         // Redirect back to patients index page
         return redirect()->route('patients.index')->with('message', 'Patient deleted successfully');
     }
+
+
+    // Assume we have a new view for this
+    public function showDeleted()
+    {
+        $patients = Patient::onlyTrashed()->orderBy('deleted_at', 'desc')->paginate(10);
+        return view('patient.deleted', ['patients' => $patients]); 
+    }
+    
+
+// Restores the soft-deleted patient
+    public function restore($id)
+{
+    $patient = Patient::onlyTrashed()->findOrFail($id);
+    $patient->restore(); 
+
+    return redirect()->route('patients.index')->with('message', 'Patient restored successfully');
+}
+
+public function showDeletedEntries($patientID)
+{
+    /*if (!auth()->user()->isAdmin()) {
+        abort(403);
+    }*/
+
+    $patient = Patient::onlyTrashed()->findOrFail($patientID);
+    $deletedEntries = JournalEntry::onlyTrashed()->where('patient_id', $patientID)
+        ->with(['files' => function ($query) {
+            $query->withTrashed();
+        }])->get();
+
+    return view('patient.deleted', ['patient' => $patient, 'deletedEntries' => $deletedEntries]);
+}
+
+
+
 }

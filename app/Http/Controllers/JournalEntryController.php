@@ -16,7 +16,11 @@ class JournalEntryController extends Controller
      */
     public function index()
     {
-        //
+        $entries = JournalEntry::with(['files' => function ($query) {
+            $query->whereNull('deleted_at');
+        }])->get();
+        
+        return view('journalEntries.index', ['entries' => $entries]);
     }
 
     /**
@@ -137,4 +141,36 @@ class JournalEntryController extends Controller
             return back()->with('error', 'Error deleting entry: ' . $e->getMessage());
         }
     }
+
+// Method to show deleted entries for a patient
+public function showDeleted($patientID)
+{
+   /* if (!auth()->user()->isAdmin()) {
+        abort(403); // Unauthorized access control
+    }*/
+
+    $patient = Patient::findOrFail($patientID);
+    $deletedEntries = JournalEntry::onlyTrashed()->where('patient_id', $patientID)
+        ->with(['files' => function ($query) {
+            $query->withTrashed(); // Include trashed files if necessary
+        }])->get();
+
+    return view('entry.deleted', ['deletedEntries' => $deletedEntries, 'patient' => $patient]);
+}
+
+
+// Method to restore a deleted entry
+public function restore($id)
+{
+    /*if (!auth()->user()->isAdmin()) {
+        abort(403); 
+    }*/
+
+    $entry = JournalEntry::onlyTrashed()->findOrFail($id);
+    $entry->restore();
+
+    return redirect()->route('entries.show', $entry->id)->with('message', 'Entry restored successfully.');
+}
+
+
 }

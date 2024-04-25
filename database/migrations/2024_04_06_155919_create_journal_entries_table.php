@@ -15,9 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->mediumText('description');
-            $table->foreignId('patient_id')->constrained('patients');
+            $table->foreignId('patient_id')->constrained('patients')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes(); // Adds the 'deleted_at' column
         });
+
+        
     }
 
     /**
@@ -26,5 +29,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('journal_entries');
+      
     }
 };
