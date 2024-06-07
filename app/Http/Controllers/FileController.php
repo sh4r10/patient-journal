@@ -48,25 +48,32 @@ class FileController extends Controller
         return back()->with('message', 'File uploaded successfully.'); // Redirect back with a success message
     }
 
-
     public function destroy($id)
     {
         try {
-            $file = File::findOrFail($id);
+            Log::info('Attempting to delete file', ['file_id' => $id]);
+            $file = File::find($id);
+            if (!$file) {
+                Log::error('File not found', ['file_id' => $id]);
+                return redirect()->back()->with('error', 'File not found.');
+            }
+            Log::info('File found', ['file_id' => $id, 'path' => $file->path]);
+            
             Storage::disk('local')->delete($file->path);  // Ensure the file is deleted from storage
             $file->delete();  // Delete the file record from the database
+            Log::info('File deleted successfully.', ['file_id' => $id, 'path' => $file->path]);
 
             return redirect()->back()->with('success', 'File deleted successfully.');
         } catch (\Exception $e) {
-            // Log the error internally
-            Log::error('Error deleting file: '.$e->getMessage());
-
-            // Redirect back with an error message if there is an exception
-            return back()->with('error', 'Error deleting file: ' . $e->getMessage());
+            Log::error('Error deleting file: ' . $e->getMessage(), ['file_id' => $id]);
+            return redirect()->back()->with('error', 'Error deleting file: ' . $e->getMessage());
         }
-
-        
     }
+    
+
+    
+    
+    
 
 
 
