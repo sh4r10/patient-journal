@@ -20,5 +20,9 @@ class Patient extends Model
             return $this->hasMany(JournalEntry::class);
         }
     
-    
+        public function treatments()
+        {
+            return $this->belongsToMany(Treatment::class);
+        }
+        
 }

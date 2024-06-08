@@ -1,3 +1,4 @@
+<!-- resources/views/patient/show.blade.php -->
 @vite(['resources/js/display-dates.js'])
 <x-app-layout>
 
@@ -41,7 +42,20 @@
                 </ul>
             </div>
         </div>
+
+        <!-- Treatments Card -->
+        <div class="flex flex-col items-center text-base bg-white p-6 mt-4 rounded-lg shadow-sm hover:shadow-md transition ease-in-out delay-50">
+            <h2 class="text-xl font-bold mb-4">Treatments</h2>
+            <ul class="list-disc list-inside">
+                @forelse ($treatments as $treatment)
+                    <li>{{ $treatment->name }}</li>
+                @empty
+                    <li>No treatments assigned.</li>
+                @endforelse
+            </ul>
+        </div>
     </div>
+
     <div class="md:w-2/3 w-full mt-12">
         <div class="flex justify-end items-center">
             <div class="flex gap-2">
