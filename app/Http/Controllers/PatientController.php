@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\JournalEntry;
 use App\Models\Patient;
+use App\Models\Treatment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -42,12 +43,14 @@ class PatientController extends Controller
      */
     public function create()
     {
-        return view('patient.create');
+        $treatments = Treatment::all();
+        return view('patient.create', compact('treatments'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
+    /*
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -60,24 +63,44 @@ class PatientController extends Controller
         $patient = Patient::create($data);
 
         return to_route('patients.show', $patient)->with('message', 'Patient created successfully');
-    }
+    }*/
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'personnummer' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+            'phone' => 'required|string|max:255',
+            'treatments' => 'nullable|array',
+            'treatments.*' => 'exists:treatments,id',
+        ]);
 
+        $patient = Patient::create($request->only(['name', 'personnummer', 'email', 'phone']));
+        if ($request->has('treatments')) {
+            $patient->treatments()->attach($request->input('treatments'));
+        }
+
+        return to_route('patients.show', $patient)->with('message', 'Patient created successfully');
+    }
     /**
      * Display the specified resource.
      */
-    public function show(Patient $patient)
-    {
-        $entries = JournalEntry::with('files')->where('patient_id', $patient->id)->orderBy('created_at', 'desc')->paginate(5);
+   
+public function show(Patient $patient)
+{
+    $entries = JournalEntry::with('files')->where('patient_id', $patient->id)->orderBy('created_at', 'desc')->paginate(5);
+    $treatments = $patient->treatments; // Retrieve the treatments associated with the patient
 
-        return view('patient.show', ['patient' => $patient, 'entries' => $entries]);
-    }
+    return view('patient.show', compact('patient', 'entries', 'treatments'));
+}
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(Patient $patient)
     {
-        return view('patient.edit', ['patient' => $patient]);
+        $treatments = Treatment::all();
+        return view('patient.edit', compact('patient', 'treatments'));
     }
 
     /**
@@ -85,17 +108,26 @@ class PatientController extends Controller
      */
     public function update(Request $request, Patient $patient)
     {
-        $data = $request->validate([
-            'name' => ['required', 'string'],
-            'personnummer' => ['required', 'string'],
-            'email' => ['required', 'email'],
-            'phone' => ['required', 'string'],
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'personnummer' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+            'phone' => 'required|string|max:255',
+            'treatments' => 'nullable|array',
+            'treatments.*' => 'exists:treatments,id',
         ]);
-
-        $patient->update($data);
-
+    
+        $patient->update($request->only(['name', 'personnummer', 'email', 'phone']));
+    
+        if ($request->has('treatments')) {
+            $patient->treatments()->sync($request->input('treatments'));
+        } else {
+            $patient->treatments()->detach();
+        }
+    
         return to_route('patients.show', $patient)->with('message', 'Patient updated successfully');
     }
+    
 
     /**
      * Remove the specified resource from storage.

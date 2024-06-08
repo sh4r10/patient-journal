@@ -10,10 +10,16 @@
     }
 </script>
 <x-app-layout>
+
+<div class="container mx-auto mt-12">
+        <div class="flex justify-start mb-4">
+            <a href="{{ route('patients.index') }}" class="btn btn-secondary">Back to Patients</a>
+        </div>
+
     <div class="mt-16 max-w-screen-lg mx-auto">
         <!-- Search form -->
         <div class="m-auto max-w-md">
-            <form method="GET" action="{{ route('patients.index') }}" class="flex flex-row justify-between gap-2">
+            <form method="GET" action="{{ route('treatments.index') }}" class="flex flex-row justify-between gap-2">
                 <label class="input input-bordered flex items-center w-full justify-between p-0 pl-2 py-6 rounded-l-full rounded-r-full">
                     <input id="search" type="text" name="search" class="grow border-none focus:ring-0" placeholder="Search..." />
                     <button type="submit" class="btn btn-secondary btn-circle">
@@ -26,11 +32,8 @@
         </div>
 
         <div class="flex justify-between items-center mt-16">
-            <h1 id="heading" class="text-2xl">All Patients</h1>
-            <div class="flex gap-4">
-                <a href="{{ route('patients.create') }}" class="btn btn-primary">New Patient</a>
-                <a href="{{ route('treatments.index') }}" class="btn btn-secondary">View Treatments</a>
-            </div>
+            <h1 id="heading" class="text-2xl">All Treatments</h1>
+            <a href="{{ route('treatments.create') }}" class="btn btn-primary">New Treatment</a>
         </div>
         <div class="overflow-x-auto mt-4">
             <table class="table text-base">
@@ -38,27 +41,18 @@
                 <thead class="text-sm">
                     <tr>
                         <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
+                        <th>Description</th>
                         <th>Last Updated</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($patients as $patient)
+                    @foreach($treatments as $treatment)
                     <tr class="hover group">
-                        <td>
-                            <div class="flex items-center gap-3">
-                                <div>
-                                    <div class="font-bold">{{$patient->name}}</div>
-                                    <div class="text-sm opacity-50">{{preg_replace("/-?\d{4}$/", "-XXXX",$patient->personnummer)}}</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>{{$patient->email}}</td>
-                        <td>{{$patient->phone}}</td>
-                        <td class="format-date" data-date="{{$patient->updated_at}}"></td>
+                        <td>{{ $treatment->name }}</td>
+                        <td>{{ $treatment->description }}</td>
+                        <td class="format-date" data-date="{{ $treatment->updated_at }}"></td>
                         <th>
-                            <a href="{{ route('patients.show', $patient) }}" class="btn group-hover:btn-secondary btn-sm">Details</a>
+                            <a href="{{ route('treatments.show', $treatment) }}" class="btn group-hover:btn-secondary btn-sm">Details</a>
                         </th>
                     </tr>
                     @endforeach
@@ -66,6 +60,6 @@
             </table>
         </div>
 
-        {{$patients->links('vendor.pagination.tailwind')}}
+        {{ $treatments->links('vendor.pagination.tailwind') }}
     </div>
 </x-app-layout>

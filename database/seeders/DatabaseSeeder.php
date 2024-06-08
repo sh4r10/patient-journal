@@ -24,5 +24,6 @@ class DatabaseSeeder extends Seeder
         //
         // Patient::factory(1)->create();
         JournalEntry::factory(15)->create();
+        $this->call(TreatmentSeeder::class);
     }
 }
