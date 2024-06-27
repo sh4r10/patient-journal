@@ -13,7 +13,10 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('patients.index')" :active="request()->routeIs('patients.index')">
-                        {{ __('All Patients') }}
+                        {{ __('Patients') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('treatments.index')" :active="request()->routeIs('treatments.index')">
+                        {{ __('Treatments') }}
                     </x-nav-link>
                 </div>
             </div>
