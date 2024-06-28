@@ -1,13 +1,14 @@
 @vite(['resources/js/display-dates.js'])
 <script>
-    window.onload = () => {
+    window.addEventListener("load", () => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         if (urlParams.has("search")) {
             document.getElementById("heading").innerHTML = "Search Results";
             document.getElementById("search").value = urlParams.get("search");
         }
-    }
+        humanizeDates();
+    });
 </script>
 <x-app-layout>
     <div class="mt-16 max-w-screen-xl mx-auto">
