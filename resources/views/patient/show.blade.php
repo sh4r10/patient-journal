@@ -70,7 +70,7 @@
                 </ul>
             </div>
         </div>
--->
+        -->
         <div class="w-full mt-8">
             <div class="flex justify-end items-center">
                 <div class="flex gap-2">
@@ -180,62 +180,43 @@
                     </form>
                 </dialog>
             </div>
-        </form>
-    </dialog>
-
-    <!-- Video Modal -->
-    <dialog id="video_modal" class="modal">
-        <div class="modal-box max-w-screen-xl w-full flex justify-center items-center">
-            <video id="modal-video" class="w-full aspect-video" controls>
-                Your browser does not support the video tag.
-            </video>
         </div>
-        <div class="my-10">
-            @foreach($entries as $entry)
-            <div class="w-full bg-white p-6 mb-6 rounded shadow-sm hover:shadow-md transition ease-in-out delay-50">
-                <h2 class="font-semibold text-xl mb-2">{{$entry->title}}</h2>
-                <p class="mb-4">{{$entry->description}}</p>
-                <div class="flex justify-between items-center">
-                    <div class="flex gap-4">
-                        @foreach($entry->files as $file)
-                        @if(strpos($file->mime, 'video') !== false)
-                        <video onclick="(()=>{var video = document.getElementById('modal-video');video.innerHTML='';var source = document.createElement('source');source.setAttribute('src', '{{'/'.$file->path}}');source.setAttribute('type', '{{$file->mime}}');video.appendChild(source);video_modal.showModal();})()" class="w-24 h-24 rounded object-cover cursor-pointer">
-                            <source src="{{'/'.$file->path}}" type="{{$file->mime}}">
-                            Your browser does not support the video tag.
-                        </video>
-                        @else
-                        <img onclick="(() => {document.getElementById('modal-image').src='{{'/'.$file->path}}'; image_modal.showModal();})()" src="{{'/'.$file->path}}" class="w-24 h-24 rounded object-cover cursor-pointer" alt="Image" />
-                        @endif
-                        @endforeach
-                    </div>
-                    <div class="space-x-2">
-                        <!-- Debug: Show Entry ID -->
-                        <div>Entry ID: {{ $entry->id }}</div>
 
-    <!-- Image Modal -->
-    <dialog id="image_modal" class="modal">
-        <div class="modal-box max-w-screen-xl w-full flex justify-center items-center">
-            <img id="modal-image" />
-        </div>
+        <!-- Video Modal -->
+        <dialog id="video_modal" class="modal">
+            <div class="modal-box max-w-screen-xl w-full flex justify-center items-center">
+                <video id="modal-video" class="w-full aspect-video" controls>
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </dialog>
+
+        <!-- Image Modal -->
+        <dialog id="image_modal" class="modal">
+            <div class="modal-box max-w-screen-xl w-full flex justify-center items-center">
+                <img id="modal-image" />
+            </div>
+        </dialog>
+
+        <!-- Delete Confirmation Dialog -->
+        <dialog id="deleteDialog" class="modal">
+            <form method="post" class="modal-box">
+                @csrf
+                @method('DELETE')
+                <h3 class="font-bold text-lg">Are you sure you want to delete this entry?</h3>
+                <div class="modal-action">
+                    <button type="submit" class="btn btn-error">Delete</button>
+                    <button type="button" onclick="closeDialog()" class="btn">Cancel</button>
+                </div>
+            </form>
+        </dialog>
     </div>
 </div>
 
-<!-- Delete Confirmation Dialog -->
-<dialog id="deleteDialog" class="modal">
-    <form method="post" class="modal-box">
-        @csrf
-        @method('DELETE')
-        <h3 class="font-bold text-lg">Are you sure you want to delete this entry?</h3>
-        <div class="modal-action">
-            <button type="submit" class="btn btn-error">Delete</button>
-            <button type="button" onclick="closeDialog()" class="btn">Cancel</button>
-        </div>
-    </form>
-</dialog>
-
-        function closeDialog() {
-            const dialog = document.getElementById('deleteDialog');
-            dialog.close();
-        }
-    </script>
+<script>
+    function closeDialog() {
+        const dialog = document.getElementById('deleteDialog');
+        dialog.close();
+    }
+</script>
 </x-app-layout>

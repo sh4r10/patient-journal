@@ -6,44 +6,41 @@ use Illuminate\Http\Request;
 
 class TreatmentController extends Controller
 {
-
-
-
-
-    
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $selectedTreatments = $request->input('treatments', []);
+
         $treatments = Treatment::query()
+            ->with('patients')
             ->when($search, function ($query, $search) {
                 return $query->where('name', 'like', "%{$search}%")
-                             ->orWhere('description', 'like', "%{$search}%");
+                             ->orWhere('description', 'like', "%{$search}%")
+                             ->orWhereHas('patients', function($query) use ($search) {
+                                 $query->where('name', 'like', "%{$search}%");
+                             });
+            })
+            ->when($selectedTreatments, function ($query) use ($selectedTreatments) {
+                return $query->whereHas('patients', function ($query) use ($selectedTreatments) {
+                    $query->whereIn('treatment_id', $selectedTreatments);
+                });
             })
             ->paginate(10);
 
-        return view('treatments.index', compact('treatments'));
+        $allTreatments = Treatment::all();
+
+        return view('treatments.index', compact('treatments', 'allTreatments'));
     }
-
-
-
-
-
 
     public function create()
     {
         return view('treatments.create');
     }
 
-
-
-
-
-
-
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:treatments,name', // Ensure the name is unique
             'description' => 'required|string|max:1000',
         ]);
 
@@ -51,11 +48,6 @@ class TreatmentController extends Controller
 
         return redirect()->route('treatments.index')->with('success', 'Treatment created successfully.');
     }
-
-
-
-
-
 
     public function show(Treatment $treatment)
     {
@@ -67,14 +59,10 @@ class TreatmentController extends Controller
         return view('treatments.edit', compact('treatment'));
     }
 
-
-
-
-
     public function update(Request $request, Treatment $treatment)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:treatments,name,' . $treatment->id, // Ensure the name is unique
             'description' => 'required|string|max:1000',
         ]);
 
@@ -82,12 +70,6 @@ class TreatmentController extends Controller
 
         return redirect()->route('treatments.index')->with('success', 'Treatment updated successfully.');
     }
-
-
-
-
-
-
 
     public function destroy(Treatment $treatment)
     {
