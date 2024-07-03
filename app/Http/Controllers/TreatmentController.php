@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Treatment;
+use App\Models\Patient;
 use Illuminate\Http\Request;
 
 class TreatmentController extends Controller
@@ -9,27 +10,31 @@ class TreatmentController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-        $selectedTreatments = $request->input('treatments', []);
+        $treatmentIds = $request->input('treatments', []);
 
-        $treatments = Treatment::query()
-            ->with('patients')
-            ->when($search, function ($query, $search) {
-                return $query->where('name', 'like', "%{$search}%")
-                             ->orWhere('description', 'like', "%{$search}%")
-                             ->orWhereHas('patients', function($query) use ($search) {
-                                 $query->where('name', 'like', "%{$search}%");
-                             });
-            })
-            ->when($selectedTreatments, function ($query) use ($selectedTreatments) {
-                return $query->whereHas('patients', function ($query) use ($selectedTreatments) {
-                    $query->whereIn('treatment_id', $selectedTreatments);
-                });
-            })
-            ->paginate(10);
-
+        // Fetch all treatments for the filter form
         $allTreatments = Treatment::all();
 
-        return view('treatments.index', compact('treatments', 'allTreatments'));
+        // Fetch patients based on selected treatments
+        $patientsQuery = Patient::query();
+
+        if (!empty($treatmentIds)) {
+            $patientsQuery->whereHas('treatments', function ($q) use ($treatmentIds) {
+                $q->whereIn('treatment_id', $treatmentIds);
+            });
+        }
+
+        if ($search) {
+            $patientsQuery->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%");
+            });
+        }
+
+        $patients = $patientsQuery->distinct()->paginate(10);
+
+        return view('treatments.index', compact('allTreatments', 'patients'));
     }
 
     public function create()
@@ -40,7 +45,7 @@ class TreatmentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:treatments,name', // Ensure the name is unique
+            'name' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
         ]);
 
@@ -62,7 +67,7 @@ class TreatmentController extends Controller
     public function update(Request $request, Treatment $treatment)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:treatments,name,' . $treatment->id, // Ensure the name is unique
+            'name' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
         ]);
 

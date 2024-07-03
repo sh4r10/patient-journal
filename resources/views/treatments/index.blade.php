@@ -53,8 +53,7 @@
             </div>
 
             <div class="flex justify-between items-center mt-16">
-                <h1 id="heading" class="text-2xl">All Treatments</h1>
-                <a href="{{ route('treatments.create') }}" class="btn btn-primary">New Treatment</a>
+                <h1 id="heading" class="text-2xl">Search Results</h1>
             </div>
             <div class="overflow-x-auto mt-4">
                 <table class="table text-base">
@@ -62,26 +61,28 @@
                     <thead class="text-sm">
                         <tr>
                             <th>Name</th>
-                            <th>Description</th>
-                            <th>Patients</th>
+                            <th>Email</th>
+                            <th>Phone</th>
                             <th>Last Updated</th>
+                            <th>Treatments</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($treatments as $treatment)
+                        @foreach($patients as $patient)
                         <tr class="hover group">
-                            <td>{{ $treatment->name }}</td>
-                            <td>{{ $treatment->description }}</td>
+                            <td>{{ $patient->name }}</td>
+                            <td>{{ $patient->email }}</td>
+                            <td>{{ $patient->phone }}</td>
+                            <td class="format-date" data-date="{{ $patient->updated_at }}"></td>
                             <td>
                                 <ul>
-                                    @foreach($treatment->patients as $patient)
-                                        <li>{{ $patient->name }}</li>
+                                    @foreach($patient->treatments as $treatment)
+                                        <li>{{ $treatment->name }}</li>
                                     @endforeach
                                 </ul>
                             </td>
-                            <td class="format-date" data-date="{{ $treatment->updated_at }}"></td>
                             <th>
-                                <a href="{{ route('treatments.show', $treatment) }}" class="btn group-hover:btn-secondary btn-sm">Details</a>
+                                <a href="{{ route('patients.show', $patient) }}" class="btn group-hover:btn-secondary btn-sm">Details</a>
                             </th>
                         </tr>
                         @endforeach
@@ -89,7 +90,7 @@
                 </table>
             </div>
 
-            {{ $treatments->links('vendor.pagination.tailwind') }}
+            {{ $patients->links('vendor.pagination.tailwind') }}
         </div>
     </div>
 </x-app-layout>
