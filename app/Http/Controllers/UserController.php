@@ -9,6 +9,8 @@ use App\Models\User;
 class UserController extends Controller
 {
 
+
+
     public function logout(Request $request)
     {   
        $info= $request->validate([
@@ -44,15 +46,16 @@ class UserController extends Controller
     /** 
      * Display a listing of the resource.
      */
-    public function index()
+     public function index()
     {
-        //
+        $users = User::all();
+        return view('backlog.index', compact('users'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+   /* public function create()
     {
       
        $user= User::create([
@@ -60,6 +63,11 @@ class UserController extends Controller
             'password'=> bcrypt('12345')
         ]);
      
+    }*/
+
+    public function create()
+    {
+        return view('backlog.create');
     }
 
     /**
@@ -67,7 +75,21 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'username' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|string|in:admin,assistant',
+        ]);
+
+        $user = User::create([
+            'name' => $request->username,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'role' => $request->role,
+        ]);
+
+        return redirect()->route('backlog.index')->with('success', 'User created successfully.');
     }
 
     /**

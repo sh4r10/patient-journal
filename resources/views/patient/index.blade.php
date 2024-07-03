@@ -12,7 +12,10 @@
 <x-app-layout>
     <div class="mt-16 max-w-screen-lg mx-auto">
         <!-- Search form -->
+        <a href="{{ route('backlog.create') }}" class="btn btn-primary">User Backlog</a>
+
         <div class="m-auto max-w-md">
+            
             <form method="GET" action="{{ route('patients.index') }}" class="flex flex-row justify-between gap-2">
                 <label class="input input-bordered flex items-center w-full justify-between p-0 pl-2 py-6 rounded-l-full rounded-r-full">
                     <input id="search" type="text" name="search" class="grow border-none focus:ring-0" placeholder="Search..." />

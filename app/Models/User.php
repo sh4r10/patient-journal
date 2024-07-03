@@ -20,13 +20,14 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_admin', // Add this line
     ];
 
     public function isAdmin()
     {
-        // Define the logic to check if the user is an admin
-        return $this->role === 'admin'; // Example: Assuming there's a 'role' column in the users table
+        return $this->is_admin;
     }
+
     /**
      * The primary key associated with the table.
      *
@@ -63,10 +64,8 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'is_admin' => 'boolean', // Add this line
+    ];
 }

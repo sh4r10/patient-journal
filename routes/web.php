@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\TreatmentController;
+use App\Http\Middleware\AdminMiddleware;
+
 
 Route::get('/file-upload', [FileController::class, 'showUploadForm'])->name('file.upload');
 Route::post('/file-upload', [FileController::class, 'store'])->name('file.store');
@@ -34,6 +36,13 @@ Route::middleware('auth')->group(function () {
 
     Route::get('entries/deleted', [JournalEntryController::class, 'showDeleted'])->name('entries.deleted')->middleware('auth');
     Route::post('entries/restore/{id}', [JournalEntryController::class, 'restore'])->name('entries.restore')->middleware('auth');
+ 
+    Route::middleware([AdminMiddleware::class])->group(function () {
+        Route::get('/backlog', [UserController::class, 'index'])->name('backlog.index');
+        Route::get('/backlog/create', [UserController::class, 'create'])->name('backlog.create');
+        Route::post('/backlog', [UserController::class, 'store'])->name('backlog.store');
+    });
+   
 });
 
 Route::middleware('auth')->group(function () {
@@ -41,5 +50,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/logout', [UserController::class, 'logout'])->name('users.logout');
 });
+
 
 require __DIR__ . '/auth.php';
