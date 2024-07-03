@@ -1,6 +1,6 @@
 import { format, formatDistanceToNow } from "date-fns";
 
-window.onload = function () {
+window.addEventListener("load", () => {
     let elements = document.getElementsByClassName("format-date");
     for (let i = 0; i < elements.length; i++) {
         const el = elements[i];
@@ -14,4 +14,4 @@ window.onload = function () {
         el.textContent += formatted;
         el.setAttribute("title", title);
     }
-};
+});

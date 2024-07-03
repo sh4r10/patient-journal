@@ -25,9 +25,9 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
-        return $this->is_admin;
+        // Define the logic to check if the user is an admin
+        return $this->role === 'admin'; // Example: Assuming there's a 'role' column in the users table
     }
-
     /**
      * The primary key associated with the table.
      *
