@@ -83,15 +83,20 @@ class PatientController extends Controller
         return to_route('patients.show', $patient)->with('message', 'Patient created successfully');
     }
     /**
-     * Display the specified resource.
+     * Display the entries of the patient.
      */
    
 public function show(Patient $patient)
 {
     $entries = JournalEntry::with('files')->where('patient_id', $patient->id)->orderBy('created_at', 'desc')->paginate(5);
-    $treatments = $patient->treatments; // Retrieve the treatments associated with the patient
 
-    return view('patient.show', compact('patient', 'entries', 'treatments'));
+    return view('patient.entries', compact('patient', 'entries'));
+}
+
+
+public function showTreatments(Patient $patient){
+    $treatments = $patient->treatments()->get();
+    return view('patient.treatments', compact('patient', 'treatments'));
 }
 
     /**

@@ -1,7 +1,6 @@
 <!-- resources/views/patient/show.blade.php -->
 @vite(['resources/js/display-dates.js'])
 <x-app-layout>
-
     @section('content')
     <div>
         <h1>Patient: {{ $patient->name }}</h1>
@@ -24,86 +23,11 @@
 
 
     <div class="container mx-auto max-w-screen-lg mt-4">
-        <div class="w-full flex flex-col items-center justify-center gap-4 text-blue-950">
-            <ul class="w-fit flex bg-white drop-shadow-sm px-8 rounded-sm justify-center items-center">
-                <li>
-                    <div class="flex justify-start items-center mr-8 gap-2">
-                        <img class="rounded-full w-8" src="https://ui-avatars.com/api/?name={{$patient->name}}&size=128&background=d4c4aa&color=1b2748&rounded=true&format=svg" alt="profile-picture">
-                        <h1 class="text-lg font-medium">{{$patient->name}}</h1>
-                    </div>
-                </li>
-                <li class="border-b-2 border-blue-950 cursor-pointer px-4 py-6 transition ease-in-out delay-50 hover:bg-gray-200">Entries</li>
-                <li class="border-b-2 border-white hover:border-gray-200 cursor-pointer px-4 py-6 transition ease-in-out delay-50 hover:bg-gray-200">Notes</li>
-                <li class="border-b-2 border-white hover:border-gray-200 cursor-pointer px-4 py-6 transition ease-in-out delay-50 hover:bg-gray-200">Treatments</li>
-                <li class="border-b-2 border-white hover:border-gray-200 cursor-pointer px-4 py-6 transition ease-in-out delay-50 hover:bg-gray-200">Manage</li>
-            </ul>
-        </div>
-        <!--
-        <div class="md:w-1/3 w-full hidden">
-            <div class="hidden flex flex-col items-center text-base bg-white p-12 rounded-lg shadow-sm hover:shadow-md transition ease-in-out delay-50">
-                <img class="rounded-full w-32" src="https://ui-avatars.com/api/?name={{$patient->name}}&size=128&background=58b177&rounded=true&format=svg" alt="profile-picture">
-                <h1 class="text-2xl font-bold">{{$patient->name}}</h1>
-                <p class="text-gray-600">{{$patient->personnummer}}</p>
-                <a class="text-blue-500 hover:underline" href="mailto:{{$patient->email}}">{{$patient->email}}</a>
-                <a class="text-blue-500 hover:underline" href="tel:{{$patient->phone}}">{{$patient->phone}}</a>
-                <div class="dropdown dropdown-bottom dropdown-end dropdown-hover">
-                    <div tabindex="0" role="button" class="btn btn-wide btn-neutral">Manage Patient</div>
-                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                        <li>
-                            <a href={{route('patients.edit', $patient)}}>Update</a>
-                        </li>
-                        <li>
-                            <button class="text-red-700" onclick="delete_confirmation.showModal()">Delete</button>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="flex flex-col items-center text-base bg-white p-6 mt-4 rounded-lg shadow-sm hover:shadow-md transition ease-in-out delay-50">
-                <h2 class="text-xl font-bold mb-4">Treatments</h2>
-                <ul class="list-disc list-inside">
-                    @forelse ($treatments as $treatment)
-                    <li>{{ $treatment->name }}</li>
-                    @empty
-                    <li>No treatments assigned.</li>
-                    @endforelse
-                </ul>
-            </div>
-        </div>
--->
+        <x-patient-nav :patient="$patient" active="entries" />
         <div class="w-full mt-8">
-            <div class="flex justify-end items-center">
-                <div class="flex gap-2">
-                    <a href="{{route('entries.create', $patient)}}" class="drop-shadow bg-blue-950 hover:bg-blue-900 text-white rounded-sm py-2 px-8">New Entry</a>
-                    <dialog id="delete_confirmation" class="modal">
-                        <div class="modal-box">
-                            <h3 class="font-bold text-lg">Confirm password to delete</h3>
-                            <form action="{{route('patients.destroy', $patient)}}" method="post">
-                                @csrf
-                                @method('DELETE')
-                                <!-- Password -->
-                                <div class="mt-4">
-                                    <x-input-label for="password" :value="__('Password')" />
-
-                                    <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
-
-                                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                                </div>
-                                <div class="flex flex-row-reverse justify-start items-center mt-4 w-full">
-                                    <x-danger-button class="ms-3">
-                                        {{ __('Delete') }}
-                                    </x-danger-button>
-                                    <x-secondary-button class="ms-3" onclick="delete_confirmation.close()">
-                                        {{ __('Cancel') }}
-                                    </x-secondary-button>
-                                </div>
-                            </form>
-                        </div>
-                        <form method="dialog" class="modal-backdrop">
-                            <button>close</button>
-                        </form>
-                    </dialog>
-                </div>
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl">Entries</h1>
+                <a href="{{route('entries.create', $patient)}}" class="drop-shadow bg-blue-950 hover:bg-blue-900 text-white rounded-sm py-2 px-8">New Entry</a>
             </div>
             <div class="my-6">
                 @foreach($entries as $entry)
