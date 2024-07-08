@@ -16,25 +16,41 @@ class PatientController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
-    {
-        $search = $request->input('search');
-        $query = Patient::query();
+   // PatientController.php
 
-       //Include Soft-Deleted Patients for Admins
-       /* if (auth()->user()->isAdmin()) {
-            $query->withTrashed();
-        }*/
-    
-        $patients = $query->when($search, function ($query) use ($search) {
-            $query->where('name', 'like', "%{$search}%")
-                ->orWhere('personnummer', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%")
-                ->orWhere('phone', 'like', "%{$search}%");
-        })->orderBy('created_at', 'desc')->paginate(10);
-    
-        return view('patient.index', ['patients' => $patients]);
+public function index(Request $request)
+{
+    $search = $request->input('search');
+    $treatmentIds = $request->input('treatments', []);
+
+    $query = Patient::query();
+
+    //Include Soft-Deleted Patients for Admins
+    /* if (auth()->user()->isAdmin()) {
+        $query->withTrashed();
+    }*/
+
+    if ($search) {
+        $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('personnummer', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%")
+              ->orWhere('phone', 'like', "%{$search}%");
+        });
     }
+
+    if (!empty($treatmentIds)) {
+        $query->whereHas('treatments', function ($q) use ($treatmentIds) {
+            $q->whereIn('treatment_id', $treatmentIds);
+        });
+    }
+
+    $patients = $query->orderBy('created_at', 'desc')->paginate(10);
+    $allTreatments = Treatment::all();
+
+    return view('patient.index', ['patients' => $patients, 'allTreatments' => $allTreatments]);
+}
+
     
 
 

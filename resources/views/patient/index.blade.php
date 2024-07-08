@@ -1,3 +1,4 @@
+<!-- resources/views/patients/index.blade.php -->
 @vite(['resources/js/display-dates.js'])
 <script>
     window.addEventListener("load", () => {
@@ -16,16 +17,37 @@
             <h1 id="heading" class="text-2xl">All Patients</h1>
             <div class="flex gap-4 justify-end items-center">
                 <!-- Search form -->
-                <form method="GET" action="{{ route('patients.index') }}" class="m-0">
+                <form method="GET" action="{{ route('patients.index') }}" class="m-0 flex items-center">
                     <label class="flex items-center w-full justify-between rounded-sm">
                         <input id="search" type="text" name="search" class="rounded-l-sm w-48 grow border border-slate-300 focus:border-slate-300 focus:ring-0" placeholder="Query..." />
                         <button type="submit" class="border-l-0 border py-2 border-slate-300 bg-white hover:bg-gray-100 text-blue-950 px-2 rounded-r-sm">Search</button>
                     </label>
+                    <button type="button" class="btn ml-2" onclick="document.getElementById('filter-modal').showModal()">Filter</button>
                 </form>
 
                 <a href="{{ route('patients.create') }}" class="drop-shadow bg-blue-950 hover:bg-blue-900 text-white rounded-sm py-2 px-8">New Patient</a>
             </div>
         </div>
+
+        <!-- Filter Modal -->
+        <dialog id="filter-modal" class="modal">
+            <form method="GET" action="{{ route('patients.index') }}" class="modal-box">
+                <h3 class="font-bold text-lg">Select Treatments</h3>
+                <div class="flex flex-wrap gap-4 mb-4">
+                    @foreach($allTreatments as $treatment)
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="treatments[]" value="{{ $treatment->id }}" />
+                            <span>{{ $treatment->name }}</span>
+                        </label>
+                    @endforeach
+                </div>
+                <div class="modal-action">
+                    <button type="submit" class="btn btn-primary">Apply</button>
+                    <button type="button" class="btn" onclick="document.getElementById('filter-modal').close()">Cancel</button>
+                </div>
+            </form>
+        </dialog>
+
         <div class="overflow-x-auto mt-4 bg-slate-50 border border-slate-300 rounded-sm">
             <table class="table text-base">
                 <!-- head -->
@@ -35,6 +57,7 @@
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Last Updated</th>
+                        <th>Treatments</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -52,8 +75,15 @@
                         <td>{{$patient->email}}</td>
                         <td>{{$patient->phone}}</td>
                         <td class="format-date" data-date="{{$patient->updated_at}}"></td>
+                        <td>
+                            <ul>
+                                @foreach($patient->treatments as $treatment)
+                                    <li>{{ $treatment->name }}</li>
+                                @endforeach
+                            </ul>
+                        </td>
                         <td class="text-right">
-                            <a href="{{ route('patients.show', $patient) }}" class="rounded-sm hover:bg-gray-200 text-blue-950 hover:border-blue-950 bg-gray-50 border border-slate-200 transition ease-in-out delay-50 py-2 px-8 rounded-sm ">Open</a>
+                            <a href="{{ route('patients.show', $patient) }}" class="rounded-sm hover:bg-gray-200 text-blue-950 hover:border-blue-950 bg-gray-50 border border-slate-200 transition ease-in-out delay-50 py-2 px-8 rounded-sm">Open</a>
                         </td>
                     </tr>
                     @endforeach
