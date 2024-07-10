@@ -20,7 +20,7 @@ class RegisteredUserController extends Controller
     public function create()
     {
         $users = User::query()->get()->count();
-        if ($users > 0) {
+        if ($users > 1) {
             return to_route('login');
         }
 

@@ -10,32 +10,16 @@ class TreatmentController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-        $treatmentIds = $request->input('treatments', []);
+        $treatments = Treatment::query()
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%")
+                             ->orWhere('description', 'like', "%{$search}%");
+            })
+            ->paginate(10);
 
-        // Fetch all treatments for the filter form
-        $allTreatments = Treatment::all();
-
-        // Fetch patients based on selected treatments
-        $patientsQuery = Patient::query();
-
-        if (!empty($treatmentIds)) {
-            $patientsQuery->whereHas('treatments', function ($q) use ($treatmentIds) {
-                $q->whereIn('treatment_id', $treatmentIds);
-            });
-        }
-
-        if ($search) {
-            $patientsQuery->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('phone', 'like', "%{$search}%");
-            });
-        }
-
-        $patients = $patientsQuery->distinct()->paginate(10);
-
-        return view('treatments.index', compact('allTreatments', 'patients'));
+        return view('treatments.index', compact('treatments'));
     }
+
 
     public function create()
     {

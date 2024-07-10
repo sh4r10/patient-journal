@@ -1,4 +1,4 @@
-<!-- resources/views/patients/index.blade.php -->
+<!-- resources/views/patient/index.blade.php -->
 @vite(['resources/js/display-dates.js'])
 <script>
     window.addEventListener("load", () => {
@@ -26,6 +26,7 @@
                 </form>
 
                 <a href="{{ route('patients.create') }}" class="drop-shadow bg-blue-950 hover:bg-blue-900 text-white rounded-sm py-2 px-8">New Patient</a>
+                <a href="{{ route('assistance.create') }}" class="drop-shadow bg-green-600 hover:bg-green-500 text-white rounded-sm py-2 px-8">New User</a>
             </div>
         </div>
 

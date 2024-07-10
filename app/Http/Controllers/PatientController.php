@@ -8,6 +8,7 @@ use App\Models\Treatment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\TreatmentController;
 
 use Illuminate\Validation\ValidationException;
 
@@ -18,17 +19,17 @@ class PatientController extends Controller
      */
    // PatientController.php
 
+
 public function index(Request $request)
 {
     $search = $request->input('search');
     $treatmentIds = $request->input('treatments', []);
-
     $query = Patient::query();
 
-    //Include Soft-Deleted Patients for Admins
-    /* if (auth()->user()->isAdmin()) {
+    // Include Soft-Deleted Patients for Admins
+    if (auth()->user()->isAdmin()) {
         $query->withTrashed();
-    }*/
+    }
 
     if ($search) {
         $query->where(function ($q) use ($search) {
