@@ -2,15 +2,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Treatment;
+use App\Models\Patient;
 use Illuminate\Http\Request;
 
 class TreatmentController extends Controller
 {
-
-
-
-
-    
     public function index(Request $request)
     {
         $search = $request->input('search');
@@ -25,20 +21,10 @@ class TreatmentController extends Controller
     }
 
 
-
-
-
-
     public function create()
     {
         return view('treatments.create');
     }
-
-
-
-
-
-
 
     public function store(Request $request)
     {
@@ -52,11 +38,6 @@ class TreatmentController extends Controller
         return redirect()->route('treatments.index')->with('success', 'Treatment created successfully.');
     }
 
-
-
-
-
-
     public function show(Treatment $treatment)
     {
         return view('treatments.show', compact('treatment'));
@@ -66,10 +47,6 @@ class TreatmentController extends Controller
     {
         return view('treatments.edit', compact('treatment'));
     }
-
-
-
-
 
     public function update(Request $request, Treatment $treatment)
     {
@@ -82,12 +59,6 @@ class TreatmentController extends Controller
 
         return redirect()->route('treatments.index')->with('success', 'Treatment updated successfully.');
     }
-
-
-
-
-
-
 
     public function destroy(Treatment $treatment)
     {

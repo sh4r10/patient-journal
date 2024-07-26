@@ -71,52 +71,76 @@
         </div>
     </div>
 
-    <!-- Delete Confirmation Dialog -->
-    <dialog id="deleteDialog" class="modal">
-        <form method="post" class="modal-box">
-            @csrf
-            @method('DELETE')
-            <h3 class="font-bold text-lg">Are you sure you want to delete this entry?</h3>
-            <div class="modal-action">
-                <button type="submit" class="btn btn-error">Delete</button>
-                <button type="button" onclick="closeDialog()" class="btn">Cancel</button>
+    <div class="md:w-2/3 w-full mt-12">
+        <div class="flex justify-end items-center">
+            <div class="flex gap-2">
+                <a href="{{route('entries.create', $patient)}}" class="btn btn-secondary">New Entry</a>
+                <dialog id="delete_confirmation" class="modal">
+                    <div class="modal-box">
+                        <h3 class="font-bold text-lg">Confirm password to delete</h3>
+                        <form action="{{route('patients.destroy', $patient)}}" method="post">
+                            @csrf
+                            @method('DELETE')
+                            <!-- Password -->
+                            <div class="mt-4">
+                                <x-input-label for="password" :value="__('Password')" />
+
+                                <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
+
+                                <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                            </div>
+                            <div class="flex flex-row-reverse justify-start items-center mt-4 w-full">
+                                <x-danger-button class="ms-3">
+                                    {{ __('Delete') }}
+                                </x-danger-button>
+                                <x-secondary-button class="ms-3" onclick="delete_confirmation.close()">
+                                    {{ __('Cancel') }}
+                                </x-secondary-button>
+                            </div>
+                        </form>
+                    </div>
+                    <form method="dialog" class="modal-backdrop">
+                        <button>close</button>
+                    </form>
+                </dialog>
             </div>
-        </form>
-    </dialog>
-
-    <!-- Video Modal -->
-    <dialog id="video_modal" class="modal">
-        <div class="modal-box max-w-screen-xl w-full flex justify-center items-center">
-            <video id="modal-video" class="w-full aspect-video" controls>
-                Your browser does not support the video tag.
-            </video>
         </div>
-        <form method="dialog" class="modal-backdrop">
-            <button>close</button>
-        </form>
-    </dialog>
 
-    <!-- Image Modal -->
-    <dialog id="image_modal" class="modal">
-        <div class="modal-box max-w-screen-xl w-full flex justify-center items-center">
-            <img id="modal-image" />
-        </div>
-        <form method="dialog" class="modal-backdrop">
-            <button>close</button>
-        </form>
-    </dialog>
+        <!-- Video Modal -->
+        <dialog id="video_modal" class="modal">
+            <div class="modal-box max-w-screen-xl w-full flex justify-center items-center">
+                <video id="modal-video" class="w-full aspect-video" controls>
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </dialog>
 
-    <script>
-        function confirmDelete(entryId) {
-            const form = document.querySelector('#deleteDialog form');
-            form.action = `/entries/delete/${entryId}`;
-            const dialog = document.getElementById('deleteDialog');
-            dialog.showModal();
-        }
+        <!-- Image Modal -->
+        <dialog id="image_modal" class="modal">
+            <div class="modal-box max-w-screen-xl w-full flex justify-center items-center">
+                <img id="modal-image" />
+            </div>
+        </dialog>
 
-        function closeDialog() {
-            const dialog = document.getElementById('deleteDialog');
-            dialog.close();
-        }
-    </script>
+        <!-- Delete Confirmation Dialog -->
+        <dialog id="deleteDialog" class="modal">
+            <form method="post" class="modal-box">
+                @csrf
+                @method('DELETE')
+                <h3 class="font-bold text-lg">Are you sure you want to delete this entry?</h3>
+                <div class="modal-action">
+                    <button type="submit" class="btn btn-error">Delete</button>
+                    <button type="button" onclick="closeDialog()" class="btn">Cancel</button>
+                </div>
+            </form>
+        </dialog>
+    </div>
+</div>
+
+<script>
+    function closeDialog() {
+        const dialog = document.getElementById('deleteDialog');
+        dialog.close();
+    }
+</script>
 </x-app-layout>
