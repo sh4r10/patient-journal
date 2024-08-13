@@ -18,6 +18,11 @@
                     <x-nav-link :href="route('treatments.index')" :active="request()->routeIs('treatments.index')">
                         {{ __('Treatments') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('assistants.index')"
+                        :active="request()->routeIs('assistants.index')">
+                        {{ __('Assistants') }}
+                    </x-nav-link>
+
                 </div>
             </div>
 
@@ -44,7 +49,6 @@
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-
                             <x-dropdown-link :href="route('logout')" onclick="event.preventDefault();
                                                 this.closest('form').submit();">
                                 {{ __('Log Out') }}

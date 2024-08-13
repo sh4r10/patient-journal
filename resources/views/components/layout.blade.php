@@ -9,7 +9,7 @@
     @vite('resources/css/app.css')
 </head>
 
-<body class="font-sans antialiased bg-gray-100">
+<body class="font-sans antialiased">
     @session('message')
     <div role="alert" class="alert alert-success max-w-lg m-auto absolute bottom-0 right-0 m-2" onclick="this.remove()">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">

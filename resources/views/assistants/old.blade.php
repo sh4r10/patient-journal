@@ -7,7 +7,7 @@
 
     <div class="container mx-auto mt-12">
         <div class="flex justify-end mb-4">
-            <a href="{{ route('assistance.create') }}" class="btn btn-primary">Create New User</a>
+            <a href="{{ route('users.create') }}" class="btn btn-primary">Create New User</a>
         </div>
 
         <!-- Display list of users -->
@@ -28,8 +28,8 @@
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->is_admin ? 'Admin' : 'Assistant' }}</td>
                             <td>
-                                <a href="{{ route('assistance.edit', $user) }}" class="btn btn-sm btn-outline btn-warning">Edit</a>
-                                <form action="{{ route('assistance.destroy', $user) }}" method="POST" style="display:inline;">
+                                <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-outline btn-warning">Edit</a>
+                                <form action="{{ route('users.destroy', $user) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-outline btn-error" onclick="return confirm('Are you sure?');">Delete</button>

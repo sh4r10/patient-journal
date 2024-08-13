@@ -26,34 +26,33 @@ Route::middleware('auth')->group(function () {
     Route::get('/patients/{patient}/entries', [PatientController::class, 'show'])->name('patients.entries');
     Route::get('/patients/{patient}/notes', [PatientController::class, 'showNotes'])->name('patients.notes');
     Route::get('/patients/{patient}/treatments', [PatientController::class, 'showTreatments'])->name('patients.treatments');
-    Route::get('/patients/{patient}/manage', [PatientController::class, 'showManage'])->name('patients.manage');
+    Route::get('/patients/{patient}/manage', [PatientController::class, 'edit'])->name('patients.manage');
 
     Route::resource('treatments', TreatmentController::class);
     Route::resource('entries', JournalEntryController::class, ['only' => ['store', 'edit', 'update', 'destroy']]);
     Route::get('/entries/create/{patient}', [JournalEntryController::class, 'create'])->name('entries.create');
     Route::get('/uploads/{filename}', [FileController::class, 'show'])->name('files.show');
-    Route::delete('/files/{file}', [FileController::class, 'destroy'])->name('files.destroy'); 
+    Route::delete('/files/{file}', [FileController::class, 'destroy'])->name('files.destroy');
 
     Route::get('/patients/{patient}/deleted-entries', [PatientController::class, 'showDeletedEntries'])
-    ->name('patients.deleted.entries')
-    ->middleware('auth');
+        ->name('patients.deleted.entries')
+        ->middleware('auth');
 
     Route::get('/patients/deleted', [PatientController::class, 'showDeleted'])->name('patients.deleted')->middleware('auth');
     Route::post('/patients/restore/{id}', [PatientController::class, 'restore'])->name('patients.restore')->middleware('auth');
 
     Route::get('entries/deleted', [JournalEntryController::class, 'showDeleted'])->name('entries.deleted')->middleware('auth');
     Route::post('entries/restore/{id}', [JournalEntryController::class, 'restore'])->name('entries.restore')->middleware('auth');
- 
+
     Route::middleware(['auth', 'adminMiddleware'])->group(function () {
-        Route::get('/assistance', [UserController::class, 'index'])->name('assistance.index');
-        Route::get('/assistance/create', [UserController::class, 'create'])->name('assistance.create');
-        Route::post('/assistance', [UserController::class, 'store'])->name('assistance.store');
-        Route::get('/assistance/{user}/edit', [UserController::class, 'edit'])->name('assistance.edit');
-        Route::put('/assistance/{user}', [UserController::class, 'update'])->name('assistance.update');
-        Route::delete('/assistance/{user}', [UserController::class, 'destroy'])->name('assistance.destroy');
+        Route::get('/assistants', [UserController::class, 'index'])->name('assistants.index');
+        Route::get('/assistants/create', [UserController::class, 'create'])->name('assistants.create');
+        Route::post('/assistants', [UserController::class, 'store'])->name('assistants.store');
+        Route::get('/assistants/{user}/edit', [UserController::class, 'edit'])->name('assistants.edit');
+        Route::put('/assistants/{user}', [UserController::class, 'update'])->name('assistants.update');
+        Route::get('/assistants/{user}', [UserController::class, 'show'])->name('assistants.show');
+        Route::delete('/assistants/{user}', [UserController::class, 'destroy'])->name('assistants.destroy');
     });
-  
-   
 });
 
 Route::middleware('auth')->group(function () {

@@ -8,7 +8,7 @@
     <div class="container mx-auto mt-12">
         <div class="flex justify-center">
             <div class="w-full max-w-md">
-                <form action="{{ route('assistance.store') }}" method="POST">
+                <form action="{{ route('assistants.store') }}" method="POST">
                     @csrf
                     <div class="mb-4">
                         <label for="name" class="block text-gray-700">Name:</label>

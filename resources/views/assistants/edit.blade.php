@@ -1,5 +1,5 @@
 <x-app-layout>
-    <form method="POST" action="{{ route('assistance.update', $user) }}">
+    <form method="POST" action="{{ route('assistants.update', $user) }}">
         @csrf
         @method('PUT')
 

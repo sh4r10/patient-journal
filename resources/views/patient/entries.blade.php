@@ -31,7 +31,8 @@
             </div>
             <div class="my-6">
                 @foreach($entries as $entry)
-                <div class="w-full bg-white p-6 border-b border-blue-950 rounded-sm shadow-sm hover:shadow-md transition ease-in-out delay-50 text-blue-950">
+                <div class="w-full bg-white p-6 border border-slate-200
+                    rounded-sm shadow-sm hover:bg-gray-50 transition ease-in-out delay-50 text-blue-950">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="font-semibold text-xl">{{$entry->title}}</h2>
                         <a href="{{ route('entries.edit', $entry) }}" class="rounded-sm hover:bg-gray-200 text-blue-950 hover:border-blue-950 bg-gray-50 border border-slate-200 transition ease-in-out delay-50 py-0.5 px-8 rounded-sm">Edit</a>
@@ -74,7 +75,6 @@
     <div class="md:w-2/3 w-full mt-12">
         <div class="flex justify-end items-center">
             <div class="flex gap-2">
-                <a href="{{route('entries.create', $patient)}}" class="btn btn-secondary">New Entry</a>
                 <dialog id="delete_confirmation" class="modal">
                     <div class="modal-box">
                         <h3 class="font-bold text-lg">Confirm password to delete</h3>
