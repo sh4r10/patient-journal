@@ -204,4 +204,31 @@ class PatientController extends Controller
 
         return view('patient.deleted', ['patient' => $patient, 'deletedEntries' => $deletedEntries]);
     }
+
+    
+    public function showNotes($id)
+    {
+        $patient = Patient::findOrFail($id);
+        $notes = $patient->notes; // Assuming a `notes` relationship on the `Patient` model
+    
+        return view('patient.notes', compact('patient', 'notes'));
+    }
+    
+    public function storeNote(Request $request, $id)
+    {
+        $request->validate([
+            'content' => 'required|string',
+        ]);
+    
+        $patient = Patient::findOrFail($id);
+        $patient->notes()->create([
+            'content' => $request->input('content'),
+            'created_at' => now(),
+        ]);
+    
+        return redirect()->route('patients.notes', $id);
+    }
+    
+
+
 }
