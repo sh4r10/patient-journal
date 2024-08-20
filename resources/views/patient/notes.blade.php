@@ -8,7 +8,6 @@
         <div class="bg-blue-50 p-4 rounded-lg shadow-md mb-8">
             <div class="flex justify-between items-center">
                 <h1 class="text-3xl font-semibold text-gray-800">Notes for {{ $patient->name }}</h1>
-               
             </div>
         </div>
 
@@ -30,8 +29,10 @@
                 <ul class="list-disc pl-5 space-y-4">
                     @foreach($notes as $note)
                         <li class="flex flex-col border-b border-gray-200 pb-4">
-                            <p class="text-gray-800 text-lg font-semibold">{{ $note->content }}</p>
-                            <span class="text-sm text-gray-500 mt-1">({{ $note->created_at->format('d M Y') }})</span>
+                            <div class="flex justify-between items-start">
+                                <p class="text-gray-800 text-lg font-semibold">{{ $note->content }}</p>
+                                <span class="text-sm text-gray-500">{{ $note->created_at->format('d M Y') }}</span>
+                            </div>
                         </li>
                     @endforeach
                 </ul>
