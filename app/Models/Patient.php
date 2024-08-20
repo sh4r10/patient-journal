@@ -25,4 +25,10 @@ class Patient extends Model
             return $this->belongsToMany(Treatment::class);
         }
         
+
+        public function notes()
+        {
+            return $this->hasMany(Note::class);
+        }
+
 }

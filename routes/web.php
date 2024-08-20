@@ -24,10 +24,12 @@ Route::redirect('/', '/patients')->middleware('auth')->name('dashboard');
 Route::middleware('auth')->group(function () {
     Route::resource('patients', PatientController::class);
     Route::get('/patients/{patient}/entries', [PatientController::class, 'show'])->name('patients.entries');
-    Route::get('/patients/{patient}/notes', [PatientController::class, 'showNotes'])->name('patients.notes');
+    Route::get('/patients/{id}/notes', [PatientController::class, 'showNotes'])->name('patients.notes');
+    Route::post('/patients/{id}/notes', [PatientController::class, 'storeNote'])->name('patients.notes.store');
+
     Route::get('/patients/{patient}/treatments', [PatientController::class, 'showTreatments'])->name('patients.treatments');
     Route::get('/patients/{patient}/manage', [PatientController::class, 'edit'])->name('patients.manage');
-
+  
     Route::resource('treatments', TreatmentController::class);
     Route::resource('entries', JournalEntryController::class, ['only' => ['store', 'edit', 'update', 'destroy']]);
     Route::get('/entries/create/{patient}', [JournalEntryController::class, 'create'])->name('entries.create');
