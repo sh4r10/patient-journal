@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Storage;
+use Ramsey\Uuid\Uuid;
 use App\Models\User;
 
 class UserController extends Controller
@@ -47,24 +48,34 @@ class UserController extends Controller
         return view('assistants.create');
     }
 
+   
     public function store(Request $request)
     {
-        $request->validate([
-            'username' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|string|in:admin,assistant',
+        \Log::info('Store method called');
+        
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8',
+            'role' => 'required|in:assistant,admin',
         ]);
-
-        $user = User::create([
-            'name' => $request->username,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'role' => $request->role,
+    
+        \Log::info('Validated data:', $validatedData);
+    
+        User::create([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'password' => bcrypt($validatedData['password']),
+            'role' => $validatedData['role'],
         ]);
-
+    
+        \Log::info('User created successfully');
+    
         return redirect()->route('assistants.index')->with('success', 'User created successfully.');
     }
+    
+    
+    
 
     public function edit(User $user)
     {

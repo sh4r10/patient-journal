@@ -35,7 +35,7 @@
                         <tr class="border-t border-slate-200 hover:bg-slate-100">
                             <td class="py-2 px-4">{{$user->name}}</td>
                             <td class="py-2 px-4">{{$user->email}}</td>
-                            <td class="py-2 px-4">{{ $user->role == "admin" ? 'Admin' : 'Assistant' }}</td>
+                            <td class="py-2 px-4">{{ $user->role == "admin" ? 'admin' : 'assistant' }}</td>
                             <td class="py-2 px-4 text-right w-full flex
                                 justify-end items-center gap-2">
                                 <form class="m-0 font-sm" action="{{ route('assistants.destroy', $user) }}" method="POST">
