@@ -26,7 +26,7 @@
                         <tr class="hover group">
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
-                            <td>{{ $user->is_admin ? 'Admin' : 'Assistant' }}</td>
+                            <td>{{ $user->role ? 'admin' : 'assistant' }}</td>
                             <td>
                                 <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-outline btn-warning">Edit</a>
                                 <form action="{{ route('users.destroy', $user) }}" method="POST" style="display:inline;">
