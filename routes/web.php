@@ -28,6 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/patients/{id}/notes', [PatientController::class, 'storeNote'])->name('patients.notes.store');
 
     Route::get('/patients/{patient}/treatments', [PatientController::class, 'showTreatments'])->name('patients.treatments');
+    Route::post('/patients/{patient}/assign-treatment', [PatientController::class, 'assignTreatment'])->name('patients.assignTreatment');
+    Route::delete('/patients/{patient}/unassign-treatment/{treatment}', [PatientController::class, 'unassignTreatment'])->name('patients.unassignTreatment');
     Route::get('/patients/{patient}/manage', [PatientController::class, 'edit'])->name('patients.manage');
   
     Route::resource('treatments', TreatmentController::class);

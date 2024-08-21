@@ -5,7 +5,7 @@
 
 @php
     // Determine if the current user is an admin
-    $isAdmin = Auth::check() && Auth::user()->isAdmin(); // Replace `isAdmin()` with your actual role check method
+    $isAdmin = Auth::check() && Auth::user()->isAdmin(); 
 @endphp
 
 <div class="w-full flex flex-col items-center justify-center gap-4 text-blue-950">
@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        <!-- Conditionally Render "Notes" Link -->
+        <!-- Conditionally Render "Notes" -->
         @if($isAdmin)
             @if($active === 'notes')
                 <a class="border-b-2 border-blue-950 cursor-pointer px-4 py-6 transition ease-in-out delay-50 hover:bg-gray-200">{{ ucfirst('notes') }}</a>
@@ -25,7 +25,7 @@
                 <a href="{{ route('patients.notes', $patient->id) }}" class="border-b-2 border-white hover:border-gray-200 cursor-pointer px-4 py-6 transition ease-in-out delay-50 hover:bg-gray-200">{{ ucfirst('notes') }}</a>
             @endif
         @endif
-        
+
         @foreach(['entries', 'treatments', 'manage'] as $link)
             @if($link === $active)
                 <a class="border-b-2 border-blue-950 cursor-pointer px-4 py-6 transition ease-in-out delay-50 hover:bg-gray-200">{{ ucfirst($link) }}</a>
