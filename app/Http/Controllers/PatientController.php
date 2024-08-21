@@ -108,7 +108,8 @@ class PatientController extends Controller
     public function showTreatments(Patient $patient)
     {
         $treatments = $patient->treatments()->get();
-        return view('patient.treatments', compact('patient', 'treatments'));
+        $allTreatments = Treatment::all();
+        return view('patient.treatments', compact('patient', 'treatments', 'allTreatments'));
     }
 
     /**
@@ -160,7 +161,7 @@ class PatientController extends Controller
             ]);
         }
 
-        // Find the patient by ID
+       
         $patient = Patient::findOrFail($id);
 
         try {
@@ -209,7 +210,7 @@ class PatientController extends Controller
     public function showNotes($id)
     {
         $patient = Patient::findOrFail($id);
-        $notes = $patient->notes; // Assuming a `notes` relationship on the `Patient` model
+        $notes = $patient->notes; 
     
         return view('patient.notes', compact('patient', 'notes'));
     }
@@ -229,6 +230,23 @@ class PatientController extends Controller
         return redirect()->route('patients.notes', $id);
     }
     
+    public function assignTreatment(Request $request, Patient $patient)
+    {
+        $request->validate([
+            'treatment_id' => 'required|exists:treatments,id',
+        ]);
 
+        $patient->treatments()->attach($request->input('treatment_id'));
+
+        return redirect()->route('patients.treatments', $patient)->with('message', 'Treatment assigned successfully.');
+    }
+
+    
+    public function unassignTreatment(Patient $patient, Treatment $treatment)
+    {
+        $patient->treatments()->detach($treatment->id);
+
+        return redirect()->route('patients.treatments', $patient)->with('message', 'Treatment unassigned successfully.');
+    }
 
 }
