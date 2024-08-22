@@ -34,6 +34,6 @@ class JournalEntry extends Model
 
     public function files()
     {
-        return $this->hasMany(File::class);
+        return $this->hasMany(File::class)->withTrashed();
     }
 }
