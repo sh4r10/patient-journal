@@ -94,56 +94,52 @@ class JournalEntryController extends Controller
     /**
      * Update the specified resource in storage.
      */
+    public function update(Request $request, string $entryID)
+{
+    Log::info('Update Entry Request', $request->all());
 
-     public function update(Request $request, string $entryID)
-     {
-         Log::info('Update Entry Request', $request->all()); // Log the entire request
- 
-         $request->validate([
-             'files.*' => 'nullable|mimes:png,jpeg,mp4|max:2048', // Added mp4 for video files
-             'title' => ['required', 'string'],
-             'description' => ['required', 'string'],
-             'patient_id' => ['required', 'string'],
-             'delete_files' => 'nullable|array',
-             'delete_files.*' => 'exists:files,id',
-         ]);
- 
-         $journal_entry = JournalEntry::findOrFail($entryID);
-         $patient = Patient::findOrFail($journal_entry->patient_id);
- 
-         // Handle file deletions
-         if ($request->filled('delete_files')) {
-             foreach ($request->input('delete_files') as $fileId) {
-                 $file = $journal_entry->files()->find($fileId);
-                 if ($file) {
-                     Storage::delete($file->path);
-                     $file->delete();
-                 }
-             }
-         }
- 
-         // Handle new file uploads
-         if ($request->hasFile('files')) {
-             foreach ($request->file('files') as $file) {
-                 $id = Uuid::uuid4();
-                 $filename = $id . '.' . $file->getClientOriginalExtension();
-                 $path = 'uploads' . '/' . $filename;
-                 Storage::disk('local')->put($path, file_get_contents($file), 'public');
-                 File::create([
-                     'id' => $id,
-                     'path' => $path,
-                     'mime' => $file->getClientMimeType(),
-                     'journal_entry_id' => $journal_entry->id
-                 ]);
-             }
-         }
- 
-         $journal_entry->update(['title' => $request->title, 'description' => $request->description]);
- 
-         Log::info('Entry Updated Successfully', ['entry_id' => $journal_entry->id]); // Log success
- 
-         return to_route('patients.show', $patient)->with('message', 'Entry updated successfully');
-     }
+    $request->validate([
+        'files.*' => 'nullable|mimes:png,jpeg,mp4|max:2048',
+        'title' => ['required', 'string'],
+        'description' => ['required', 'string'],
+        'patient_id' => ['required', 'string'],
+    ]);
+
+    $journal_entry = JournalEntry::findOrFail($entryID);
+    $patient = Patient::findOrFail($journal_entry->patient_id);
+
+    // Update the journal entry
+    $journal_entry->update([
+        'title' => $request->title,
+        'description' => $request->description,
+    ]);
+
+    // Handle new file uploads
+    if ($request->hasFile('files')) {
+        foreach ($request->file('files') as $file) {
+            $id = Uuid::uuid4();
+            $filename = $id . '.' . $file->getClientOriginalExtension();
+            $path = 'uploads/' . $filename;
+            Storage::disk('local')->put($path, file_get_contents($file), 'public');
+            File::create([
+                'id' => $id,
+                'path' => $path,
+                'mime' => $file->getClientMimeType(),
+                'journal_entry_id' => $journal_entry->id
+            ]);
+        }
+    }
+
+    Log::info('Entry Updated Successfully', ['entry_id' => $journal_entry->id]);
+
+    return to_route('patients.show', $patient)->with('message', 'Entry updated successfully.');
+}
+
+
+    
+    
+     
+
      
     /**
      * Remove the specified resource from storage.

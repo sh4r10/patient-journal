@@ -39,7 +39,7 @@
                 <ul class="list-disc list-inside space-y-4">
                     @forelse ($treatments as $treatment)
                         <li class="flex justify-between items-center">
-                            <span class="text-gray-800" style="hoverover">{{ $treatment->name }}</span>
+                            <span class="text-blue-900" style="hoverover">{{ $treatment->name }}</span>
                             @if(Auth::check() && Auth::user()->isAdmin())
                                 <!-- Unassign Button -->
                                 <form method="POST" action="{{ route('patients.unassignTreatment', [$patient, $treatment]) }}">

@@ -9,11 +9,6 @@ use App\Http\Controllers\TreatmentController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\UserController;
 
-
-
-Route::get('/file-upload', [FileController::class, 'showUploadForm'])->name('file.upload');
-Route::post('/file-upload', [FileController::class, 'store'])->name('file.store');
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -26,27 +21,28 @@ Route::middleware('auth')->group(function () {
     Route::get('/patients/{patient}/entries', [PatientController::class, 'show'])->name('patients.entries');
     Route::get('/patients/{id}/notes', [PatientController::class, 'showNotes'])->name('patients.notes');
     Route::post('/patients/{id}/notes', [PatientController::class, 'storeNote'])->name('patients.notes.store');
-
     Route::get('/patients/{patient}/treatments', [PatientController::class, 'showTreatments'])->name('patients.treatments');
     Route::post('/patients/{patient}/assign-treatment', [PatientController::class, 'assignTreatment'])->name('patients.assignTreatment');
     Route::delete('/patients/{patient}/unassign-treatment/{treatment}', [PatientController::class, 'unassignTreatment'])->name('patients.unassignTreatment');
     Route::get('/patients/{patient}/manage', [PatientController::class, 'edit'])->name('patients.manage');
-  
+    Route::get('/patients/{patient}/deleted-entries', [PatientController::class, 'showDeletedEntries'])->name('patients.deleted.entries');
+    Route::get('/patients/deleted', [PatientController::class, 'showDeleted'])->name('patients.deleted');
+    Route::post('/patients/restore/{id}', [PatientController::class, 'restore'])->name('patients.restore');
     Route::resource('treatments', TreatmentController::class);
+
+    // Journal Entry Routes
     Route::resource('entries', JournalEntryController::class, ['only' => ['store', 'edit', 'update', 'destroy']]);
     Route::get('/entries/create/{patient}', [JournalEntryController::class, 'create'])->name('entries.create');
+    Route::get('/entries/deleted', [JournalEntryController::class, 'showDeleted'])->name('entries.deleted');
+    Route::post('/entries/restore/{id}', [JournalEntryController::class, 'restore'])->name('entries.restore');
+    Route::put('/entries/{entry}', [JournalEntryController::class, 'update'])->name('entries.update');
+    Route::delete('/entries/{entry}', [JournalEntryController::class, 'destroy'])->name('entries.destroy');
+
+    // File Routes
     Route::get('/uploads/{filename}', [FileController::class, 'show'])->name('files.show');
     Route::delete('/files/{file}', [FileController::class, 'destroy'])->name('files.destroy');
-
-    Route::get('/patients/{patient}/deleted-entries', [PatientController::class, 'showDeletedEntries'])
-        ->name('patients.deleted.entries')
-        ->middleware('auth');
-
-    Route::get('/patients/deleted', [PatientController::class, 'showDeleted'])->name('patients.deleted')->middleware('auth');
-    Route::post('/patients/restore/{id}', [PatientController::class, 'restore'])->name('patients.restore')->middleware('auth');
-
-    Route::get('entries/deleted', [JournalEntryController::class, 'showDeleted'])->name('entries.deleted')->middleware('auth');
-    Route::post('entries/restore/{id}', [JournalEntryController::class, 'restore'])->name('entries.restore')->middleware('auth');
+    Route::get('/file-upload', [FileController::class, 'showUploadForm'])->name('file.upload');
+    Route::post('/file-upload', [FileController::class, 'store'])->name('file.store');
 
     Route::middleware(['auth', 'adminMiddleware'])->group(function () {
         Route::get('/assistants', [UserController::class, 'index'])->name('assistants.index');
@@ -64,6 +60,5 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/logout', [UserController::class, 'logout'])->name('users.logout');
 });
-
 
 require __DIR__ . '/auth.php';
