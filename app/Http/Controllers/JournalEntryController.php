@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
-
+use Illuminate\Support\Facades\DB;
 class JournalEntryController extends Controller
 {
     /**
@@ -39,26 +39,26 @@ class JournalEntryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'files[]' => 'nullable|mimes:png,jpeg',
-            'title' => ['required', 'string'],
-            'description' => ['required', 'string'],
-            'patient_id' => ['required', 'string']
+            'files.*' => 'nullable|mimes:png,jpeg,jpg|max:2048',
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'patient_id' => 'required|string'
         ]);
-
-        $patient = Patient::where('id', $request->patient_id)->first();
-
+    
+        $patient = Patient::findOrFail($request->patient_id);
+    
         $journal_entry = JournalEntry::create([
             'title' => $request->title,
             'description' => $request->description,
             'patient_id' => $request->patient_id,
         ]);
-
+    
         if ($request->hasFile('files')) {
             foreach ($request->file('files') as $file) {
                 $id = Uuid::uuid4();
                 $filename = $id . '.' . $file->getClientOriginalExtension();
-                $path = 'uploads' . '/' . $filename;
-                Storage::disk('local')->put($path, file_get_contents($file), 'public');
+                $path = $file->storeAs('uploads', $filename, 'public'); // Use 'public' disk
+    
                 File::create([
                     'id' => $id,
                     'path' => $path,
@@ -66,10 +66,11 @@ class JournalEntryController extends Controller
                     'journal_entry_id' => $journal_entry->id
                 ]);
             }
-            return to_route('patients.show', $patient);
         }
-        return to_route('patients.show', $patient);
+    
+        return redirect()->route('patients.show', $patient->id)->with('message', 'Journal entry created successfully.');
     }
+    
 
     /**
      * Display the specified resource.
@@ -95,45 +96,60 @@ class JournalEntryController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $entryID)
-{
-    Log::info('Update Entry Request', $request->all());
+    {
+        Log::info('Update Entry Request', $request->all());
 
-    $request->validate([
-        'files.*' => 'nullable|mimes:png,jpeg,mp4|max:2048',
-        'title' => ['required', 'string'],
-        'description' => ['required', 'string'],
-        'patient_id' => ['required', 'string'],
-    ]);
+        // Validate the request
+        $request->validate([
+            'files.*' => 'nullable|file|mimes:png,jpeg,jpg,mp4|max:2048',
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'patient_id' => 'required|string',
+        ]);
 
-    $journal_entry = JournalEntry::findOrFail($entryID);
-    $patient = Patient::findOrFail($journal_entry->patient_id);
+        DB::beginTransaction();
 
-    // Update the journal entry
-    $journal_entry->update([
-        'title' => $request->title,
-        'description' => $request->description,
-    ]);
+        try {
+            // Find the journal entry and patient
+            $journal_entry = JournalEntry::findOrFail($entryID);
+            $patient = Patient::findOrFail($journal_entry->patient_id);
 
-    // Handle new file uploads
-    if ($request->hasFile('files')) {
-        foreach ($request->file('files') as $file) {
-            $id = Uuid::uuid4();
-            $filename = $id . '.' . $file->getClientOriginalExtension();
-            $path = 'uploads/' . $filename;
-            Storage::disk('local')->put($path, file_get_contents($file), 'public');
-            File::create([
-                'id' => $id,
-                'path' => $path,
-                'mime' => $file->getClientMimeType(),
-                'journal_entry_id' => $journal_entry->id
+            // Update the journal entry
+            $journal_entry->update([
+                'title' => $request->title,
+                'description' => $request->description,
             ]);
+
+            // Handle file uploads
+            if ($request->hasFile('files')) {
+                foreach ($request->file('files') as $file) {
+                    $id = Uuid::uuid4();
+                    $filename = $id . '.' . $file->getClientOriginalExtension();
+                    $path = $file->storeAs('uploads', $filename, 'public'); // Store file in 'public/uploads'
+
+                    File::create([
+                        'id' => $id,
+                        'name' => $filename,
+                        'path' => $path,
+                        'mime' => $file->getClientMimeType(),
+                        'journal_entry_id' => $journal_entry->id,
+                    ]);
+                }
+            }
+
+            DB::commit();
+            Log::info('Entry Updated Successfully', ['entry_id' => $journal_entry->id]);
+
+            // Redirect with success message
+            return redirect()->route('patients.show', ['patient' => $patient->id])->with('message', 'Entry updated successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Failed to update entry', ['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'Failed to update entry.');
         }
     }
-
-    Log::info('Entry Updated Successfully', ['entry_id' => $journal_entry->id]);
-
-    return to_route('patients.show', $patient)->with('message', 'Entry updated successfully.');
-}
+    
+    
 
 
     

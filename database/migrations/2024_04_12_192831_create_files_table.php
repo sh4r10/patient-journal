@@ -9,10 +9,10 @@ return new class extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            // Ensure the journal_entry_id foreign key is properly set up for cascading on delete
-            $table->foreignId('journal_entry_id')->constrained('journal_entries')->onDelete('cascade');
             $table->string('path');
             $table->string('mime');
+             // Ensure the journal_entry_id foreign key is properly set up for cascading on delete
+             $table->foreignId('journal_entry_id')->constrained('journal_entries')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes(); // Adds 'deleted_at' column
         });
