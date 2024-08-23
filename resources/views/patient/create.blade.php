@@ -40,9 +40,14 @@
                         <div class="label">
                             <span class="label-text">Treatments</span>
                         </div>
-                        <select name="treatments[]" multiple class="focus:border-slate-500 focus:ring-0 w-full select select-bordered w-full">
+                        <p class="w-full bg-slate-100 p-4 text-slate-700
+                        mt-2 mb-4 text-sm font-semibold rounded">Press and hold the CTRL key
+                        to select multiple options</p>
+                        <select name="treatments[]" multiple
+                        class="appearance-none focus:border-slate-500 focus:ring-0 w-full select
+                        select-bordered w-full rounded h-48">
                             @foreach($treatments as $treatment)
-                                <option value="{{ $treatment->id }}">{{ $treatment->name }}</option>
+                                <option class="appearance-none focus:bg-slate-200" value="{{ $treatment->id }}">{{ $treatment->name }}</option>
                             @endforeach
                         </select>
                     </label>

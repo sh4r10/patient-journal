@@ -20,9 +20,9 @@
     <div>
         @include('layouts.navigation')
 
-     
-         
-       
+
+
+
         <!-- Page Heading -->
         @if (isset($header))
         <header class="bg-white shadow">
@@ -35,8 +35,8 @@
         <!-- Page Content -->
         <main>
         {{ $slot }}
-       
-        
+
+
         </main>
     </div>
 </body>

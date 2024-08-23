@@ -1,12 +1,7 @@
 <!-- resources/views/treatments/create.blade.php -->
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Create New Treatment') }}
-        </h2>
-    </x-slot>
-
-    <div class="mt-12 max-w-screen-md m-auto">
+    <div class="mt-16 max-w-screen-md m-auto">
+    <h1 class="text-2xl mb-6">Create New Treatment</h1>
         <form action="{{ route('treatments.store') }}" method="POST">
             @csrf
             <div class="mb-4">
@@ -18,13 +13,15 @@
             </div>
             <div class="mb-4">
                 <label for="description" class="block text-gray-700 text-sm font-bold mb-2">Description:</label>
-                <textarea name="description" id="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('description') }}</textarea>
+                <textarea name="description" rows=8 id="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('description') }}</textarea>
                 @error('description')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
-            <div class="flex items-center justify-between">
-                <button type="submit" class="btn btn-primary">Create Treatment</button>
+            <div class="w-full flex flex-row-reverse justify-start items-center gap-4 mt-4">
+                <button type="submit" class="drop-shadow bg-blue-950 hover:bg-blue-900 text-white rounded-sm py-2 px-8">Create</button>
+                <a class="border border-blue-950 bg-white hover:bg-gray-200
+                text-blue-950 rounded-sm py-2 px-8" href="{{ route('assistants.index') }}">Cancel</a>
             </div>
         </form>
     </div>

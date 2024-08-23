@@ -27,7 +27,7 @@
             <a href="{{ route('treatments.create') }}" class="drop-shadow bg-blue-950 hover:bg-blue-900 text-white rounded-sm py-2 px-8">New treatment</a>
         </div>
 
-        <div class="overflow-x-auto mt-6 bg-slate-50 border border-slate-300 rounded-sm">
+        <div class="overflow-x-auto my-6 bg-slate-50 border border-slate-300 rounded-sm">
             <table class="table text-base w-full">
                 <!-- head -->
                 <thead class="text-sm border-b bg-slate-200 text-slate-600
@@ -42,17 +42,18 @@
                 <tbody>
                     @foreach($treatments as $treatment)
                         <tr class="border-t border-slate-200 hover:bg-slate-100">
-                            <td class="py-4 px-4">{{$treatment->name}}</td>
-                            <td class="py-4 px-4">{{$treatment->description}}</td>
-                            <td class="py-4 px-4 format-date" data-date="{{$treatment->updated_at}}"></td>
-                            <td class="py-4 px-4 text-right flex justify-end
+                            <td class="py-2 px-4">{{$treatment->name}}</td>
+                            <td class="py-2
+                            px-4">{{substr($treatment->description, 0, 30)."..."}}</td>
+                            <td class="py-2 px-4 format-date" data-date="{{$treatment->updated_at}}"></td>
+                            <td class="py-2 px-4 text-right flex justify-end
                                 items-center gap-2">
                                 <a href={{ route('treatments.edit', $treatment) }} class="rounded-sm
                                 hover:bg-gray-200 text-blue-950
                                 hover:border-blue-950 bg-gray-50 border
                                 border-slate-200 transition ease-in-out delay-50
-                                py-2 px-8">Update</a>
-                                <form class="m-0" action="{{ route('treatments.destroy', $treatment->id) }}" method="POST" onsubmit="return confirm('Are you sure?');">
+                                py-2 px-8 text-sm">Update</a>
+                                <form class="m-0 text-sm" action="{{ route('treatments.destroy', $treatment->id) }}" method="POST" onsubmit="return confirm('Are you sure?');">
                                     @csrf
                                     @method('DELETE')
 
@@ -69,7 +70,6 @@
                 </tbody>
             </table>
         </div>
-
         {{$treatments->links('vendor.pagination.tailwind')}}
     </div>
 </x-app-layout>

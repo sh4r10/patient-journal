@@ -44,13 +44,15 @@
                                     <button type="submit" class="hover:bg-gray-200
                                     text-blue-950 hover:border-blue-950
                                     bg-gray-50 border border-slate-200 transition
-                                    ease-in-out delay-50 py-2 px-8 rounded-sm" onclick="return confirm('Are you sure?');">Delete</button>
+                                    ease-in-out delay-50 py-2 px-8 rounded-sm
+                                    text-sm" onclick="return confirm('Are you sure?');">Delete</button>
                                 </form>
                                 <a href="{{ route('assistants.edit', $user) }}"
                                    class="hover:bg-gray-200
                                    text-blue-950 hover:border-blue-950
                                    bg-gray-50 border border-slate-200 transition
-                                   ease-in-out delay-50 py-2 px-8 rounded-sm">Edit</a>
+                                   ease-in-out delay-50 py-2 px-8 rounded-sm
+                                   text-sm">Edit</a>
                             </td>
                         </tr>
                     @endforeach

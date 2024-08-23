@@ -31,7 +31,7 @@
             </div>
             <div class="my-6">
                 @foreach($entries as $entry)
-                <div class="w-full bg-white p-6 border border-slate-200
+                <div class="mb-2 drop-shadow-sm w-full bg-white p-6 border border-slate-200
                     rounded-sm shadow-sm hover:bg-gray-50 transition ease-in-out delay-50 text-blue-950">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="font-semibold text-xl">{{$entry->title}}</h2>
@@ -116,8 +116,9 @@
         </dialog>
 
         <!-- Image Modal -->
-        <dialog id="image_modal" class="modal">
-            <div class="modal-box max-w-screen-xl w-full flex justify-center items-center">
+        <dialog id="image_modal" class="open:block fixed z-20 left-0 top-0 w-screen h-full
+        overflow-auto bg-white bg-opacity-70">
+            <div class="max-w-screen-xl m-auto w-full flex justify-center items-center">
                 <img id="modal-image" />
             </div>
         </dialog>
