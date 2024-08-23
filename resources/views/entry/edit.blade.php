@@ -3,38 +3,7 @@
         <div class="flex justify-start items-center mb-4">
             <h1 class="text-2xl">Update Entry for {{ $patient->name }}</h1>
         </div>
-        <div>
-            <form action="{{ route('entries.update', $journalEntry->id) }}" method="POST" class="w-full" enctype="multipart/form-data">
-                @csrf
-                @method('PUT') <!-- Correct method for update -->
-                <input type="hidden" name="patient_id" value="{{ $patient->id }}" />
-                
-                <label class="form-control w-full">
-                    <div class="label">
-                        <span class="label-text">Name</span>
-                    </div>
-                    <input type="text" name="name" value="{{ $patient->name }}" disabled class="input input-disabled input-bordered w-full" required />
-                </label>
-                <label class="form-control w-full">
-                    <div class="label">
-                        <span class="label-text">Personnummer</span>
-                    </div>
-                    <input type="text" name="personnummer" value="{{ $patient->personnummer }}" disabled class="input-disabled input input-bordered w-full" required />
-                </label>
-
-                <label class="form-control w-full">
-                    <div class="label">
-                        <span class="label-text">Title</span>
-                    </div>
-                    <input type="text" name="title" value="{{ old('title', $journalEntry->title) }}" placeholder="Entry Title" class="input input-bordered w-full" required />
-                </label>
-                <label class="form-control">
-                    <div class="label">
-                        <span class="label-text">Entry Description</span>
-                    </div>
-                    <textarea class="textarea textarea-bordered h-48" name="description" placeholder="Description" required>{{ old('description', $journalEntry->description) }}</textarea>
-                </label>
-                <label class="form-control mt-4">
+        <label class="form-control mt-4">
                     <div class="label">
                         <span class="label-text">Existing Files</span>
                     </div>
@@ -63,20 +32,54 @@
                         @endforeach
                     </div>
                 </label>
+        <div>
+            <form action="{{ route('entries.update', $journalEntry->id) }}" method="POST" class="w-full" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                <input type="hidden" name="patient_id" value="{{ $patient->id }}" />
+                
+                <label class="form-control w-full">
+                    <div class="label">
+                        <span class="label-text">Name</span>
+                    </div>
+                    <input type="text" name="name" value="{{ $patient->name }}" disabled class="input input-disabled input-bordered w-full" required />
+                </label>
+                <label class="form-control w-full">
+                    <div class="label">
+                        <span class="label-text">Personnummer</span>
+                    </div>
+                    <input type="text" name="personnummer" value="{{ $patient->personnummer }}" disabled class="input-disabled input input-bordered w-full" required />
+                </label>
+
+                <label class="form-control w-full">
+                    <div class="label">
+                        <span class="label-text">Title</span>
+                    </div>
+                    <input type="text" name="title" value="{{ old('title', $journalEntry->title) }}" placeholder="Entry Title" class="input input-bordered w-full" required />
+                </label>
+                <label class="form-control">
+                    <div class="label">
+                        <span class="label-text">Entry Description</span>
+                    </div>
+                    <textarea class="textarea textarea-bordered h-48" name="description" placeholder="Description" required>{{ old('description', $journalEntry->description) }}</textarea>
+                </label>
+               
                 <label class="form-control mt-4">
                     <div class="label">
                         <span class="label-text">New Files</span>
                     </div>
                     <input type="file" name="files[]" class="file-input file-input-bordered file-input-md w-full" multiple />
                 </label>
+                <label class="form-control mt-4">
                 <div class="w-full flex flex-row-reverse justify-start items-center gap-4 mt-4">
                     <button type="submit" class="btn btn-wide btn-primary">Update</button>
                     <a class="btn btn-ghost" href="{{ route('patients.show', $patient->id) }}">Cancel</a>
+                    </label>
                 </div>
             </form>
         </div>
     </div>
-
+        
     <!-- Video Modal -->
     <dialog id="video_modal" class="modal">
         <div class="modal-box max-w-screen-xl w-full">

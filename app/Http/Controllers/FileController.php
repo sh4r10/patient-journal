@@ -31,25 +31,25 @@ class FileController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048', // Validate the file
-            'journal_entry_id' => 'required|exists:journal_entries,id', // Ensure the journal entry exists
+            'files.*' => 'required|file|mimes:png,jpeg,jpg,mp4|max:2048',
         ]);
 
-        $file = $request->file('file');
-        $fileName = time() . '_' . $file->getClientOriginalName(); // Generate a unique name for the file
-        $filePath = Storage::putFileAs('uploads', $file, $fileName); // Save the file in the "uploads" directory
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $filename = $file->getClientOriginalName();
+                $path = $file->storeAs('uploads', $filename, 'public');
 
-        File::create([
-            'name' => $fileName,
-            'path' => $filePath,
-            'journal_entry_id' => $request->journal_entry_id, // Link the file to the journal entry
-        ]);
+                File::create([
+                    'name' => $filename,
+                    'path' => $path,
+                    'mime' => $file->getClientMimeType(),
+                ]);
+            }
+        }
 
-        return back()->with('message', 'File uploaded successfully.'); // Redirect back with a success message
+        return redirect()->back()->with('message', 'Files uploaded successfully.');
     }
 
-
-    
     public function destroy(Request $request, string $fileID)
 {
     Log::info('Attempting to delete file', ['file_id' => $fileID]);
@@ -63,34 +63,36 @@ class FileController extends Controller
 
     Log::info('File found', ['file_id' => $fileID, 'path' => $file->path]);
 
-    // Delete the file from storage and the database
-    Storage::disk('local')->delete($file->path);
-    $file->delete();
+    // Only delete the file from storage and the database if it exists
+    try {
+        if (Storage::disk('local')->exists($file->path)) {
+            Storage::disk('local')->delete($file->path);
+        }
+        $file->delete();
 
-    Log::info('File deleted successfully.', ['file_id' => $fileID]);
+        Log::info('File deleted successfully.', ['file_id' => $fileID]);
 
-    // Redirect back to the journal entry edit page
-    return redirect()->route('entries.edit', $file->journal_entry_id)
-                     ->with('success', 'File deleted successfully.');
+        return redirect()->route('entries.edit', $file->journal_entry_id)
+                         ->with('success', 'File deleted successfully.');
+    } catch (\Exception $e) {
+        Log::error('Error deleting file: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Error deleting file.');
+    }
 }
 
 
-    
-
-
-
-    public function show(string $filename)
-    {
-        $path = 'uploads/' . $filename;
-        $file = File::where('path', $path)->firstOrFail();
-        if (!Storage::disk('local')->exists($path)) {
-            abort(404);
-        }
-
-        $fileContent = Storage::disk('local')->get($path);
-
-        return response($fileContent, 200)->header('Content-Type', $file->mime);
+public function show(string $filename)
+{
+    $path = 'uploads/' . $filename;
+    if (!Storage::disk('public')->exists($path)) {
+        abort(404);
     }
+
+    return response()->file(storage_path('app/public/' . $path));
+}
+
+
+
 
     public function restoreFile($id)
 {
