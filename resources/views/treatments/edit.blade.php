@@ -9,25 +9,29 @@
             <form action="{{ route('treatments.update', $treatment) }}" method="POST" class="w-full">
                 @csrf
                 @method('PUT')
-                <div class="flex gap-6">
+                <div class="flex gap-6 mb-4">
                     <label class="form-control w-full">
                         <div class="label">
                             <span class="label-text">Name</span>
                         </div>
-                        <input type="text" name="name" value="{{ $treatment->name }}" class="input input-bordered w-full" />
+                        <input type="text" name="name" value="{{
+                        $treatment->name }}" class="w-full rounded" />
                     </label>
                 </div>
-                <div class="flex gap-6">
+                <div class="flex gap-6 mb-4">
                     <label class="form-control w-full">
                         <div class="label">
                             <span class="label-text">Description</span>
                         </div>
-                        <textarea name="description" class="input input-bordered w-full">{{ $treatment->description }}</textarea>
+                        <textarea rows=10 name="description" class="w-full
+                        rounded">{{ $treatment->description }}</textarea>
                     </label>
                 </div>
                 <div class="w-full flex flex-row-reverse justify-start items-center gap-4 mt-4">
-                    <button class="btn btn-wide btn-primary">Update</button>
-                    <a class="btn btn-ghost" href="{{ route('treatments.index') }}">Cancel</a>
+                    <button type="submit" class="drop-shadow bg-blue-950
+                    hover:bg-blue-900 text-white rounded-sm py-2 px-8">Update</button>
+                    <a class="border border-blue-950 bg-white hover:bg-gray-200
+                    text-blue-950 rounded-sm py-2 px-8" href="{{ route('treatments.index') }}">Cancel</a>
                 </div>
             </form>
         </div>

@@ -47,7 +47,7 @@
                         class="appearance-none focus:border-slate-500 focus:ring-0 w-full select
                         select-bordered w-full rounded h-48">
                             @foreach($treatments as $treatment)
-                                <option class="appearance-none focus:bg-slate-200" value="{{ $treatment->id }}">{{ $treatment->name }}</option>
+                                <option class="appearance-none" value="{{ $treatment->id }}">{{ $treatment->name }}</option>
                             @endforeach
                         </select>
                     </label>

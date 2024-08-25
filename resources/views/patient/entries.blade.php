@@ -71,7 +71,7 @@
         <x-patient-nav :patient="$patient" active="entries" />
         <div class="w-full mt-8">
             <div class="flex justify-between items-center">
-                <h1 class="text-2xl">Entries</h1>
+                <h1 class="text-2xl font-medium">Entries</h1>
                 <a href="{{route('entries.create', $patient)}}" class="drop-shadow bg-blue-950 hover:bg-blue-900 text-white rounded-sm py-2 px-8">New Entry</a>
             </div>
             <div class="my-6">

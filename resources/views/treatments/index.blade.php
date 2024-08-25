@@ -44,7 +44,9 @@
                         <tr class="border-t border-slate-200 hover:bg-slate-100">
                             <td class="py-2 px-4">{{$treatment->name}}</td>
                             <td class="py-2
-                            px-4">{{substr($treatment->description, 0, 30)."..."}}</td>
+                            px-4">{{strlen($treatment->description) > 30 ?
+                            substr($treatment->description, 0, 30)."..." :
+                            $treatment->description}}</td>
                             <td class="py-2 px-4 format-date" data-date="{{$treatment->updated_at}}"></td>
                             <td class="py-2 px-4 text-right flex justify-end
                                 items-center gap-2">
