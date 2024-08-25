@@ -1,5 +1,50 @@
 <!-- resources/views/patient/show.blade.php -->
 @vite(['resources/js/display-dates.js'])
+<script>
+    function showImage(filePath){
+        const image_modal = document.getElementById("image_modal");
+        const modal_image = document.getElementById("modal-image");
+        modal_image.src="/"+filePath;
+        image_modal.classList.remove("hidden");
+        image_modal.classList.add("block");
+        document.body.classList.add("overflow-hidden");
+    }
+
+    function closeImageModal(){
+        const modal_image = document.getElementById("modal-image");
+        image_modal.classList.add("hidden");
+        image_modal.classList.remove("block");
+        document.body.classList.remove("overflow-hidden");
+    }
+
+
+    function showVideo(filePath, mime){
+        const video = document.getElementById('modal-video');
+        video.innerHTML = "";
+        const video_modal = document.getElementById('video_modal');
+        var source = document.createElement('source');
+        source.setAttribute('src', "/"+filePath);
+        source.setAttribute('type', mime);
+        video.appendChild(source);
+        video_modal.classList.remove("hidden");
+        video_modal.classList.add("block");
+        document.body.classList.add("overflow-hidden");
+        video.play();
+    }
+
+
+    function closeVideoModal(){
+        const video = document.getElementById('modal-video');
+        const video_modal = document.getElementById('video_modal');
+        video_modal.classList.add("hidden");
+        video_modal.classList.remove("block");
+        document.body.classList.remove("overflow-hidden");
+        video.pause();
+        video.currentTime = 0;
+
+    }
+</script>
+
 <x-app-layout>
     @section('content')
     <div>
@@ -42,12 +87,13 @@
                         <div class="flex gap-4">
                             @foreach($entry->files as $file)
                             @if(strpos($file->mime, 'video') !== false)
-                            <video onclick="(()=>{var video = document.getElementById('modal-video');video.innerHTML='';var source = document.createElement('source');source.setAttribute('src', '{{'/'.$file->path}}');source.setAttribute('type', '{{$file->mime}}');video.appendChild(source);video_modal.showModal();})()" class="w-24 h-24 rounded object-cover cursor-pointer">
+                            <video onclick="showVideo('{{$file->path}}',
+                            '{{$file->mime}}')" class="w-24 h-24 rounded object-cover cursor-pointer">
                                 <source src="{{'/'.$file->path}}" type="{{$file->mime}}">
                                 Your browser does not support the video tag.
                             </video>
                             @else
-                            <img onclick="(() => {document.getElementById('modal-image').src='{{'/'.$file->path}}'; image_modal.showModal();})()" src="{{'/'.$file->path}}" class="w-24 h-24 rounded object-cover cursor-pointer" alt="Image" />
+                            <img onclick="showImage('{{$file->path}}')" src="{{'/'.$file->path}}" class="w-24 h-24 rounded object-cover cursor-pointer" alt="Image" />
                             @endif
                             @endforeach
                         </div>
@@ -72,57 +118,6 @@
         </div>
     </div>
 
-    <div class="md:w-2/3 w-full mt-12">
-        <div class="flex justify-end items-center">
-            <div class="flex gap-2">
-                <dialog id="delete_confirmation" class="modal">
-                    <div class="modal-box">
-                        <h3 class="font-bold text-lg">Confirm password to delete</h3>
-                        <form action="{{route('patients.destroy', $patient)}}" method="post">
-                            @csrf
-                            @method('DELETE')
-                            <!-- Password -->
-                            <div class="mt-4">
-                                <x-input-label for="password" :value="__('Password')" />
-
-                                <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
-
-                                <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                            </div>
-                            <div class="flex flex-row-reverse justify-start items-center mt-4 w-full">
-                                <x-danger-button class="ms-3">
-                                    {{ __('Delete') }}
-                                </x-danger-button>
-                                <x-secondary-button class="ms-3" onclick="delete_confirmation.close()">
-                                    {{ __('Cancel') }}
-                                </x-secondary-button>
-                            </div>
-                        </form>
-                    </div>
-                    <form method="dialog" class="modal-backdrop">
-                        <button>close</button>
-                    </form>
-                </dialog>
-            </div>
-        </div>
-
-        <!-- Video Modal -->
-        <dialog id="video_modal" class="modal">
-            <div class="modal-box max-w-screen-xl w-full flex justify-center items-center">
-                <video id="modal-video" class="w-full aspect-video" controls>
-                    Your browser does not support the video tag.
-                </video>
-            </div>
-        </dialog>
-
-        <!-- Image Modal -->
-        <dialog id="image_modal" class="open:block fixed z-20 left-0 top-0 w-screen h-full
-        overflow-auto bg-white bg-opacity-70">
-            <div class="max-w-screen-xl m-auto w-full flex justify-center items-center">
-                <img id="modal-image" />
-            </div>
-        </dialog>
-
         <!-- Delete Confirmation Dialog -->
         <dialog id="deleteDialog" class="modal">
             <form method="post" class="modal-box">
@@ -137,11 +132,21 @@
         </dialog>
     </div>
 </div>
+        <!-- Video Modal -->
+        <div id="video_modal" class="hidden fixed z-30 left-0 top-0 w-full h-full
+        bg-black bg-opacity-70 flex justify-center items-center"
+        onclick="closeVideoModal()">
+            <div class="modal-box max-w-screen-xl w-full flex justify-center items-center">
+                <video id="modal-video" class="w-full aspect-video" controls>
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
 
-<script>
-    function closeDialog() {
-        const dialog = document.getElementById('deleteDialog');
-        dialog.close();
-    }
-</script>
+        <!-- Image Modal -->
+        <div id="image_modal" class="hidden fixed z-30 left-0 top-0 w-full h-full
+        bg-black bg-opacity-70 flex justify-center items-center"
+        onclick="closeImageModal()">
+            <img class="max-w-screen-xl m-auto w-full" id="modal-image" />
+        </div>
 </x-app-layout>
