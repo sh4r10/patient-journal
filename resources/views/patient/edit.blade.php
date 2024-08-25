@@ -1,34 +1,66 @@
 <!-- resources/views/patient/edit.blade.php -->
+<script>
+    function showDeleteConfirmation(e){
+        e.preventDefault();
+        e.stopPropagation();
+        const delete_confirmation = document.getElementById("delete_confirmation");
+        delete_confirmation.classList.remove("hidden");
+        delete_confirmation.classList.add("block");
+        document.body.classList.add("overflow-hidden");
+    }
+
+    function closeDeleteConfirmation(e){
+        e.preventDefault();
+        e.stopPropagation();
+        const delete_confirmation = document.getElementById("delete_confirmation");
+        delete_confirmation.classList.add("hidden");
+        delete_confirmation.classList.remove("block");
+        document.body.classList.remove("overflow-hidden");
+    }
+
+    function submitForm(e){
+        e.preventDefault();
+        e.stopPropagation();
+        const form = document.getElementById("delete-form");
+        form.submit();
+    }
+</script>
 <x-app-layout>
     <!-- Delete confirmation Modal -->
-    <dialog id="delete_confirmation" class="modal">
-            <div class="modal-box">
-                <h3 class="font-bold text-lg">Confirm password to delete</h3>
-                <form action="{{route('patients.destroy', $patient)}}" method="post">
+    <div onclick="closeDeleteConfirmation(event)" id="delete_confirmation" class="hidden fixed z-30 left-0 top-0 w-full h-full
+        bg-black bg-opacity-70 flex justify-center items-center">
+            <div class="bg-white max-w-screen-sm w-full p-8 rounded"
+            onclick="showDeleteConfirmation(event)">
+                <h3 class="font-medium text-gray-700 text-lg">Confirm password
+                to delete patient</h3>
+                <form action="{{route('patients.destroy', $patient)}}"
+                method="post" id="delete-form">
                     @csrf
                     @method('DELETE')
                     <!-- Password -->
                     <div class="mt-4">
-                        <x-input-label for="password" :value="__('Password')" />
+                        <x-input-label for="password" class="text-md
+                        font-semibold mb-2" :value="__('Password')" />
 
-                            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
+                            <x-text-input id="password" class="block py-3 mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
 
                                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
                     </div>
-                    <div class="flex flex-row-reverse justify-start items-center mt-4 w-full">
-                        <x-danger-button class="ms-3">
-                            {{ __('Delete') }}
-                        </x-danger-button>
-                        <x-secondary-button class="ms-3" onclick="delete_confirmation.close()">
-                            {{ __('Cancel') }}
-                        </x-secondary-button>
+                    <div class="flex gap-2 flex-wrap flex-row-reverse justify-start items-center mt-4 w-full">
+                            <button onclick="submitForm(event)" class="drop-shadow bg-red-700
+                                hover:bg-red-800 text-white rounded-sm py-2
+                                px-8">Delete</button>
+                            <button class="bg-gray-100
+                                hover:bg-gray-200 text-gray-900 rounded-sm py-2
+                                px-8"
+                                onClick="closeDeleteConfirmation(event)">Cancel</button>
                     </div>
                 </form>
             </div>
             <form method="dialog" class="modal-backdrop">
                 <button>close</button>
             </form>
-    </dialog>
+    </div>
 
     <div class="container mx-auto max-w-screen-lg mt-4">
         <x-patient-nav :patient="$patient" active="entries" />
@@ -81,9 +113,10 @@
                                 <a class="border border-blue-950 bg-white hover:bg-gray-200
                                 text-blue-950 rounded-sm py-2 px-8" href="{{route('patients.show', $patient) }}">Cancel</a>
                             </div>
-                            <a href="#" class="drop-shadow bg-red-100
+                            <button class="drop-shadow bg-red-100
                                 hover:bg-red-200 text-red-900 rounded-sm py-2
-                                px-8" onClick="delete_confirmation.show()">Delete</a>
+                                px-8"
+                                onClick="showDeleteConfirmation(event)">Delete</button>
                         </div>
                     </form>
                 </div>
