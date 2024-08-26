@@ -11,7 +11,7 @@
                 @method('PUT')
                 <div class="flex gap-6 mb-4">
                     <label class="form-control w-full">
-                        <div class="label">
+                        <div class="label text-slate-600 mb-2">
                             <span class="label-text">Name</span>
                         </div>
                         <input type="text" name="name" value="{{
@@ -20,7 +20,7 @@
                 </div>
                 <div class="flex gap-6 mb-4">
                     <label class="form-control w-full">
-                        <div class="label">
+                        <div class="label text-slate-600 mb-2">
                             <span class="label-text">Description</span>
                         </div>
                         <textarea rows=10 name="description" class="w-full
@@ -30,7 +30,7 @@
                 <div class="w-full flex flex-row-reverse justify-start items-center gap-4 mt-4">
                     <button type="submit" class="drop-shadow bg-blue-950
                     hover:bg-blue-900 text-white rounded-sm py-2 px-8">Update</button>
-                    <a class="border border-blue-950 bg-white hover:bg-gray-200
+                    <a class="border border-blue-950 bg-white hover:bg-slate-200
                     text-blue-950 rounded-sm py-2 px-8" href="{{ route('treatments.index') }}">Cancel</a>
                 </div>
             </form>

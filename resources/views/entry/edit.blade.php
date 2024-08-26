@@ -54,7 +54,7 @@
         e.preventDefault();
         e.stopPropagation();
 
-        const input = prompt("ARE YOU SURE YOU WANT TO DELETE?\nType `delete` to confirm the deletion.");
+        const input = prompt("Type `delete` to confirm the deletion.");
         if(input === "delete"){
             const form = document.getElementById("delete-entry-form");
             form.submit();
@@ -69,7 +69,7 @@
         <div class="flex justify-start items-center mb-8">
             <h1 class="text-2xl">Update Entry for {{ $patient->name }}</h1>
         </div>
-        <h2 class="text-xl text-gray-700 mb-4">Manage Existing Files</h2>
+        <h2 class="text-xl text-slate-700 mb-4">Manage Existing Files</h2>
         <div class="flex flex-wrap gap-4">
             @foreach ($journalEntry->files as $file)
                 <div class="relative group">
@@ -82,13 +82,14 @@
                     @else
                         <img src="{{ asset($file->path) }}"
                         class="w-24 h-24 rounded object-cover
-                        cursor-pointer" onclick="showImage(event, '{{ $file->path }}')" alt="Image" />
+                        cursor-pointer border-slate-200 border" onclick="showImage(event, '{{ $file->path }}')" alt="Image" />
                     @endif
                     <form action="{{ route('files.destroy', $file->id) }}" method="POST" class="absolute top-0 right-0 m-1" onsubmit="return confirm('Are you sure you want to delete this file?');">
                         @csrf
                         @method('DELETE') <!-- Correct method for delete -->
-                        <button type="submit" class="bg-red-700
-                        text-white rounded-full hover:bg-red-800 p-1 focus:outline-none">
+                        <button type="submit" class="bg-red-200
+                        text-red-500 rounded-full hover:bg-red-600
+                        hover:text-white p-1 focus:outline-none">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
@@ -98,7 +99,7 @@
             @endforeach
         </div>
         <div>
-        <h2 class="text-xl text-gray-700 mt-8 mb-4">Edit Entry</h2>
+        <h2 class="text-xl text-slate-700 mt-8 mb-4">Edit Entry</h2>
             <form action="{{ route('entries.update', $journalEntry->id) }}" method="POST" class="w-full" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
@@ -122,17 +123,17 @@
                 <label>Attach Additional Files</label>
                 <input type="file" name="files[]" class="mt-4 file-input file-input-bordered file-input-md w-full" multiple />
                 <div class="w-full flex flex-wrap flex-row-reverse justify-between items-center gap-4 mt-8">
-                    <div class="flex gap-2 flex-wrap">
+                    <div class="flex flex-row-reverse gap-2 flex-wrap">
                         <button type="submit" class="drop-shadow bg-blue-950
                         hover:bg-blue-900 text-white rounded-sm py-2 px-8">Update</button>
-                        <a class="border border-blue-950 bg-white hover:bg-gray-200
+                        <a class="border border-blue-950 bg-white hover:bg-slate-200
                         text-blue-950 rounded-sm py-2 px-8" href="{{
                         route('patients.show', $patient) }}">Cancel</a>
                     </div>
-                    <button class="drop-shadow bg-red-100
-                    hover:bg-red-200 text-red-900 rounded-sm py-2
+                    <button class="bg-red-50
+                    hover:bg-red-100 border border-red-200 text-red-900 rounded-sm py-2
                     px-8"
-                    onClick="deleteEntry(event)">Delete</button>
+                    onClick="deleteEntry(event)">Delete Entry</button>
                 </div>
             </form>
         </div>

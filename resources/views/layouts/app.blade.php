@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="bg-white" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html class="bg-blue-50" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8">
@@ -16,7 +16,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="m-0 p-0 font-sans antialiased bg-white" data-theme="default">
+<body class="m-0 p-0 font-sans antialiased bg-blue-50" data-theme="default">
     <div>
         @include('layouts.navigation')
 

@@ -108,7 +108,9 @@ class PatientController extends Controller
     public function showTreatments(Patient $patient)
     {
         $treatments = $patient->treatments()->get();
-        $allTreatments = Treatment::query()->orderBy('name', 'asc')->get();
+        $treatmentIds = $treatments->pluck('id')->toArray();
+        $allTreatments = Treatment::query()->whereNotIn('id', $treatmentIds)->orderBy('name', 'asc')->get();
+
         return view('patient.treatments', compact('patient', 'treatments', 'allTreatments'));
     }
 

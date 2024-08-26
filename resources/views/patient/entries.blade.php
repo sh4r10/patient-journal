@@ -77,10 +77,15 @@
             <div class="my-6">
                 @foreach($entries as $entry)
                 <div class="mb-2 drop-shadow-sm w-full bg-white p-6 border border-slate-200
-                    rounded-sm shadow-sm hover:bg-gray-50 transition ease-in-out delay-50 text-blue-950">
+                    rounded-sm shadow-sm hover:bg-slate-50 transition ease-in-out delay-50 text-blue-950">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="font-semibold text-xl">{{$entry->title}}</h2>
-                        <a href="{{ route('entries.edit', $entry) }}" class="rounded-sm hover:bg-gray-200 text-blue-950 hover:border-blue-950 bg-gray-50 border border-slate-200 transition ease-in-out delay-50 py-0.5 px-8 rounded-sm">Edit</a>
+                        <a href="{{ route('entries.edit', $entry) }}"
+                        class="rounded-sm
+                                hover:bg-slate-200 hover:border-slate-400 text-slate-900
+                                bg-slate-50 border
+                                border-slate-200 transition ease-in-out delay-50
+                                py-2 px-8 text-sm">Update</a>
                     </div>
                     <p class="mb-4">{{$entry->description}}</p>
                     <div class="flex justify-between items-center">
@@ -93,12 +98,14 @@
                                 Your browser does not support the video tag.
                             </video>
                             @else
-                            <img onclick="showImage('{{$file->path}}')" src="{{'/'.$file->path}}" class="w-24 h-24 rounded object-cover cursor-pointer" alt="Image" />
+                            <img onclick="showImage('{{$file->path}}')"
+                            src="{{'/'.$file->path}}" class="rounded
+                            border-slate-200 border w-24 h-24 object-cover cursor-pointer" alt="Image" />
                             @endif
                             @endforeach
                         </div>
                     </div>
-                    <div class="text-gray-600 font-bold mt-4 flex justify-end gap-4 text-xs">
+                    <div class="text-slate-600 font-bold mt-4 flex justify-end gap-4 text-xs">
                         <p class="format-date" data-date="{{$entry->updated_at}}">Updated </p>
                         <p class="format-date" data-date="{{$entry->created_at}}">Created </p>
                     </div>
@@ -109,20 +116,6 @@
         </div>
     </div>
 
-        <!-- Delete Confirmation Dialog -->
-        <dialog id="deleteDialog" class="modal">
-            <form method="post" class="modal-box">
-                @csrf
-                @method('DELETE')
-                <h3 class="font-bold text-lg">Are you sure you want to delete this entry?</h3>
-                <div class="modal-action">
-                    <button type="submit" class="btn btn-error">Delete</button>
-                    <button type="button" onclick="closeDialog()" class="btn">Cancel</button>
-                </div>
-            </form>
-        </dialog>
-    </div>
-</div>
     <!-- Video Modal -->
     <div id="video_modal" class="cursor-pointer hidden fixed z-30 left-0 top-0 w-full h-full
     bg-black bg-opacity-70 flex justify-center items-center"

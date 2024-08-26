@@ -25,7 +25,7 @@
                 <input type="file" name="files[]" class="mt-4 file-input file-input-bordered file-input-md w-full" multiple />
                 <div class="w-full flex flex-row-reverse justify-start items-center gap-4 mt-4">
                     <button type="submit" class="drop-shadow bg-blue-950 hover:bg-blue-900 text-white rounded-sm py-2 px-8">Create</button>
-                    <a class="border border-blue-950 bg-white hover:bg-gray-200
+                    <a class="border border-blue-950 bg-white hover:bg-slate-200
                     text-blue-950 rounded-sm py-2 px-8" href="{{
                     route('patients.show', $patient) }}">Cancel</a>
                 </div>

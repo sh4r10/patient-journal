@@ -15,7 +15,9 @@
     <div class="mt-16 max-w-screen-xl mx-auto">
         <div class="flex justify-between items-center">
             <h1 id="heading" class="text-2xl mb-6">All Assistants</h1>
-            <a href="{{ route('assistants.create') }}" class="drop-shadow bg-blue-950 hover:bg-blue-900 text-white rounded-sm py-2 px-8">New user</a>
+            <a href="{{ route('assistants.create') }}" class="drop-shadow
+            bg-blue-950 hover:bg-blue-900 text-white rounded-sm py-2 px-8">Add
+            Assistant</a>
         </div>
 
         <div class="overflow-x-auto mt-6 bg-slate-50 border border-slate-300 rounded-sm">
@@ -38,21 +40,22 @@
                             <td class="py-2 px-4">{{ $user->role == "admin" ? 'admin' : 'assistant' }}</td>
                             <td class="py-2 px-4 text-right w-full flex
                                 justify-end items-center gap-2">
-                                <form class="m-0 font-sm" action="{{ route('assistants.destroy', $user) }}" method="POST">
+                                   <a href="{{ route('assistants.edit', $user) }}"
+                                   class="rounded-sm
+                                hover:bg-slate-200 hover:border-slate-400 text-slate-900
+                                bg-slate-50 border
+                                border-slate-200 transition ease-in-out delay-50
+                                py-2 px-8 text-sm">Update</a>
+            <form class="m-0 font-sm" action="{{ route('assistants.destroy', $user) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="hover:bg-gray-200
-                                    text-blue-950 hover:border-blue-950
-                                    bg-gray-50 border border-slate-200 transition
-                                    ease-in-out delay-50 py-2 px-8 rounded-sm
-                                    text-sm" onclick="return confirm('Are you sure?');">Delete</button>
+                                    <button type="submit" class="rounded-sm
+                                    hover:bg-red-100 hover:border-red-400 text-red-800
+                                    bg-red-50 border
+                                    border-red-200 transition ease-in-out delay-50
+                                    py-2 px-8 text-sm" onclick="return confirm('Are you sure?');">Delete</button>
                                 </form>
-                                <a href="{{ route('assistants.edit', $user) }}"
-                                   class="hover:bg-gray-200
-                                   text-blue-950 hover:border-blue-950
-                                   bg-gray-50 border border-slate-200 transition
-                                   ease-in-out delay-50 py-2 px-8 rounded-sm
-                                   text-sm">Edit</a>
+
                             </td>
                         </tr>
                     @endforeach

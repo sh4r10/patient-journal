@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-slate-800 leading-tight">
             {{ __('Create New User') }}
         </h2>
     </x-slot>
@@ -29,19 +29,19 @@
             <form action="{{ route('assistants.store') }}" method="POST">
     @csrf
     <div class="mb-4">
-        <label for="name" class="block text-gray-700">Name:</label>
+        <label for="name" class="block text-slate-700">Name:</label>
         <input type="text" name="name" id="name" class="form-control" required>
     </div>
     <div class="mb-4">
-        <label for="email" class="block text-gray-700">Email:</label>
+        <label for="email" class="block text-slate-700">Email:</label>
         <input type="email" name="email" id="email" class="form-control" required>
     </div>
     <div class="mb-4">
-        <label for="password" class="block text-gray-700">Password:</label>
+        <label for="password" class="block text-slate-700">Password:</label>
         <input type="password" name="password" id="password" class="form-control" required>
     </div>
     <div class="mb-4">
-        <label for="role" class="block text-gray-700">Role:</label>
+        <label for="role" class="block text-slate-700">Role:</label>
         <select name="role" id="role" class="form-control" required>
             <option value="assistant">Assistant</option>
             <option value="admin">Admin</option>

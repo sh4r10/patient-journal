@@ -31,7 +31,7 @@
         bg-black bg-opacity-70 flex justify-center items-center">
             <div class="bg-white max-w-screen-sm w-full p-8 rounded"
             onclick="showDeleteConfirmation(event)">
-                <h3 class="font-medium text-gray-700 text-lg">Confirm password
+                <h3 class="font-medium text-slate-700 text-lg">Confirm password
                 to delete patient</h3>
                 <form action="{{route('patients.destroy', $patient)}}"
                 method="post" id="delete-form">
@@ -50,8 +50,8 @@
                             <button onclick="submitForm(event)" class="drop-shadow bg-red-700
                                 hover:bg-red-800 text-white rounded-sm py-2
                                 px-8">Delete</button>
-                            <button class="bg-gray-100
-                                hover:bg-gray-200 text-gray-900 rounded-sm py-2
+                            <button class="bg-slate-100
+                                hover:bg-slate-200 text-slate-900 rounded-sm py-2
                                 px-8"
                                 onClick="closeDeleteConfirmation(event)">Cancel</button>
                     </div>
@@ -62,8 +62,8 @@
             </form>
     </div>
 
-    <div class="container mx-auto max-w-screen-lg mt-4">
-        <x-patient-nav :patient="$patient" active="entries" />
+    <div class="container mx-auto max-w-screen-md mt-4">
+        <x-patient-nav :patient="$patient" active="manage" />
         <div class="w-full mt-8">
                 <div class="flex justify-start items-center mb-4">
                     <h1 class="text-2xl font-medium">Edit Patient</h1>
@@ -74,49 +74,50 @@
                         @method('PUT')
                         <div class="flex gap-6 mt-4 mb-8 w-full">
                             <label class="w-full">
-                                <div class="label">
+                                <div class="label text-slate-600 mb-2">
                                     <span class="label-text">Name</span>
                                 </div>
-                                <input type="text" name="name"
+                                <input type="text" class="rounded w-full" name="name"
                                                    value={{$patient->name}} class="mt-2 focus:border-slate-500 focus:ring-0 w-full" required />
                             </label>
                             <label class="w-full">
-                                <div class="label">
+                                <div class="label text-slate-600 mb-2">
                                     <span class="label-text">Personnummer</span>
                                 </div>
-                                <input type="text" name="personnummer"
+                                <input type="text" class="rounded w-full" name="personnummer"
                                                    value={{$patient->personnummer}} class="mt-2 focus:border-slate-500 focus:ring-0 w-full" required />
                             </label>
                         </div>
                         <div class="flex gap-6 mb-8">
                             <label class="w-full">
-                                <div class="label">
+                                <div class="label text-slate-600 mb-2">
                                     <span class="label-text">Email</span>
                                 </div>
-                                <input type="email" name="email"
+                                <input type="email" class="rounded w-full" name="email"
                                                     value={{$patient->email}} class="mt-2 focus:border-slate-500 focus:ring-0 w-full" required />
                             </label>
                             <label class="w-full">
-                                <div class="label">
+                                <div class="label text-slate-600 mb-2">
                                     <span class="label-text">Phone</span>
                                 </div>
-                                <input type="text" name="phone"
+                                <input type="text" class="rounded w-full" name="phone"
                                                    value={{$patient->phone}} class="mt-2 focus:border-slate-500 focus:ring-0 w-full" required />
                             </label>
                         </div>
                         <div class="w-full flex flex-row-reverse justify-between
                         items-center flex-wrap">
-                            <div class="flex gap-2">
+                            <div class="flex flex-row-reverse flex-wrap gap-2">
                                 <button type="submit" class="drop-shadow bg-blue-950
                                 hover:bg-blue-900 text-white rounded-sm py-2
                                 px-8">Update</button>
-                                <a class="border border-blue-950 bg-white hover:bg-gray-200
+                                <a class="border border-blue-950 bg-white hover:bg-slate-200
                                 text-blue-950 rounded-sm py-2 px-8" href="{{route('patients.show', $patient) }}">Cancel</a>
                             </div>
-                            <button class="drop-shadow bg-red-100
-                                hover:bg-red-200 text-red-900 rounded-sm py-2
+                            <button class="border border-red-200 bg-red-50
+                                hover:bg-red-100 text-red-700 rounded-sm py-2
                                 px-8"
-                                onClick="showDeleteConfirmation(event)">Delete</button>
+                                onClick="showDeleteConfirmation(event)">Delete
+                                Patient</button>
                         </div>
                     </form>
                 </div>
