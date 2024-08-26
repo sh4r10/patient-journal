@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Treatment;
@@ -13,9 +14,8 @@ class TreatmentController extends Controller
         $treatments = Treatment::query()
             ->when($search, function ($query, $search) {
                 return $query->where('name', 'like', "%{$search}%")
-                             ->orWhere('description', 'like', "%{$search}%");
-            })
-            ->paginate(10);
+                    ->orWhere('description', 'like', "%{$search}%");
+            })->orderBy('name', 'asc')->paginate(10);
 
         return view('treatments.index', compact('treatments'));
     }

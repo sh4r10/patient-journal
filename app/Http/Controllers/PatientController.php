@@ -54,7 +54,7 @@ class PatientController extends Controller
      */
     public function create()
     {
-        $treatments = Treatment::all();
+        $treatments = Treatment::query()->orderBy('name', 'asc')->get();
         return view('patient.create', compact('treatments'));
     }
 
@@ -108,7 +108,7 @@ class PatientController extends Controller
     public function showTreatments(Patient $patient)
     {
         $treatments = $patient->treatments()->get();
-        $allTreatments = Treatment::all();
+        $allTreatments = Treatment::query()->orderBy('name', 'asc')->get();
         return view('patient.treatments', compact('patient', 'treatments', 'allTreatments'));
     }
 
@@ -161,7 +161,7 @@ class PatientController extends Controller
             ]);
         }
 
-       
+
         $patient = Patient::findOrFail($id);
 
         try {
@@ -206,30 +206,30 @@ class PatientController extends Controller
         return view('patient.deleted', ['patient' => $patient, 'deletedEntries' => $deletedEntries]);
     }
 
-    
+
     public function showNotes($id)
     {
         $patient = Patient::findOrFail($id);
-        $notes = $patient->notes; 
-    
+        $notes = $patient->notes;
+
         return view('patient.notes', compact('patient', 'notes'));
     }
-    
+
     public function storeNote(Request $request, $id)
     {
         $request->validate([
             'content' => 'required|string',
         ]);
-    
+
         $patient = Patient::findOrFail($id);
         $patient->notes()->create([
             'content' => $request->input('content'),
             'created_at' => now(),
         ]);
-    
+
         return redirect()->route('patients.notes', $id);
     }
-    
+
     public function assignTreatment(Request $request, Patient $patient)
     {
         $request->validate([
@@ -241,12 +241,11 @@ class PatientController extends Controller
         return redirect()->route('patients.treatments', $patient)->with('message', 'Treatment assigned successfully.');
     }
 
-    
+
     public function unassignTreatment(Patient $patient, Treatment $treatment)
     {
         $patient->treatments()->detach($treatment->id);
 
         return redirect()->route('patients.treatments', $patient)->with('message', 'Treatment unassigned successfully.');
     }
-
 }
