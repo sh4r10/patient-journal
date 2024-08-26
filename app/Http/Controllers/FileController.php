@@ -51,55 +51,53 @@ class FileController extends Controller
     }
 
     public function destroy(Request $request, string $fileID)
-{
-    Log::info('Attempting to delete file', ['file_id' => $fileID]);
+    {
+        Log::info('Attempting to delete file', ['file_id' => $fileID]);
 
-    // Check if file exists
-    $file = File::find($fileID);
-    if (!$file) {
-        Log::error('File not found', ['file_id' => $fileID]);
-        return redirect()->back()->with('error', 'File not found.');
-    }
-
-    Log::info('File found', ['file_id' => $fileID, 'path' => $file->path]);
-
-    // Only delete the file from storage and the database if it exists
-    try {
-        if (Storage::disk('local')->exists($file->path)) {
-            Storage::disk('local')->delete($file->path);
+        // Check if file exists
+        $file = File::find($fileID);
+        if (!$file) {
+            Log::error('File not found', ['file_id' => $fileID]);
+            return redirect()->back()->with('error', 'File not found.');
         }
-        $file->delete();
 
-        Log::info('File deleted successfully.', ['file_id' => $fileID]);
+        Log::info('File found', ['file_id' => $fileID, 'path' => $file->path]);
 
-        return redirect()->route('entries.edit', $file->journal_entry_id)
-                         ->with('success', 'File deleted successfully.');
-    } catch (\Exception $e) {
-        Log::error('Error deleting file: ' . $e->getMessage());
-        return redirect()->back()->with('error', 'Error deleting file.');
+        // Only delete the file from storage and the database if it exists
+        try {
+            if (Storage::disk('local')->exists($file->path)) {
+                /*Storage::disk('local')->delete($file->path);*/
+            }
+            $file->delete();
+
+            Log::info('File deleted successfully.', ['file_id' => $fileID]);
+
+            return redirect()->route('entries.edit', $file->journal_entry_id)
+                ->with('success', 'File deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error deleting file: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error deleting file.');
+        }
     }
-}
 
 
-public function show(string $filename)
-{
-    $path = 'uploads/' . $filename;
-    if (!Storage::disk('public')->exists($path)) {
-        abort(404);
+    public function show(string $filename)
+    {
+        $path = 'uploads/' . $filename;
+        if (!Storage::disk('public')->exists($path)) {
+            abort(404);
+        }
+
+        return response()->file(storage_path('app/public/' . $path));
     }
-
-    return response()->file(storage_path('app/public/' . $path));
-}
 
 
 
 
     public function restoreFile($id)
-{
-    $file = File::onlyTrashed()->findOrFail($id);
-    $file->restore();
-    return back()->with('success', 'File restored successfully.');
-}
-
-
+    {
+        $file = File::onlyTrashed()->findOrFail($id);
+        $file->restore();
+        return back()->with('success', 'File restored successfully.');
+    }
 }

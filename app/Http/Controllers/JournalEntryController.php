@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Facades\DB;
+
 class JournalEntryController extends Controller
 {
     /**
@@ -20,7 +21,7 @@ class JournalEntryController extends Controller
         $entries = JournalEntry::with(['files' => function ($query) {
             $query->whereNull('deleted_at');
         }])->get();
-        
+
         return view('journalEntries.index', ['entries' => $entries]);
     }
 
@@ -44,21 +45,21 @@ class JournalEntryController extends Controller
             'description' => 'required|string',
             'patient_id' => 'required|string'
         ]);
-    
+
         $patient = Patient::findOrFail($request->patient_id);
-    
+
         $journal_entry = JournalEntry::create([
             'title' => $request->title,
             'description' => $request->description,
             'patient_id' => $request->patient_id,
         ]);
-    
+
         if ($request->hasFile('files')) {
             foreach ($request->file('files') as $file) {
                 $id = Uuid::uuid4();
                 $filename = $id . '.' . $file->getClientOriginalExtension();
                 $path = $file->storeAs('uploads', $filename, 'public'); // Use 'public' disk
-    
+
                 File::create([
                     'id' => $id,
                     'path' => $path,
@@ -67,10 +68,10 @@ class JournalEntryController extends Controller
                 ]);
             }
         }
-    
+
         return redirect()->route('patients.show', $patient->id)->with('message', 'Journal entry created successfully.');
     }
-    
+
 
     /**
      * Display the specified resource.
@@ -84,11 +85,11 @@ class JournalEntryController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(Request $request, string $entryID)
-{
-    $journalEntry = JournalEntry::with('files')->findOrFail($entryID);
-    $patient = Patient::findOrFail($journalEntry->patient_id);
-    return view('entry.edit', ['patient' => $patient, 'journalEntry' => $journalEntry]);
-}
+    {
+        $journalEntry = JournalEntry::with('files')->findOrFail($entryID);
+        $patient = Patient::findOrFail($journalEntry->patient_id);
+        return view('entry.edit', ['patient' => $patient, 'journalEntry' => $journalEntry]);
+    }
 
 
 
@@ -148,15 +149,15 @@ class JournalEntryController extends Controller
             return redirect()->back()->with('error', 'Failed to update entry.');
         }
     }
-    
-    
 
 
-    
-    
-     
 
-     
+
+
+
+
+
+
     /**
      * Remove the specified resource from storage.
      */
@@ -164,53 +165,51 @@ class JournalEntryController extends Controller
     {
         Log::info('Path being accessed', ['path' => request()->path()]);
         Log::info('ID Received for Deletion: ', ['id' => $id]);
-    
+
         $journalEntry = JournalEntry::find($id);
+        $patient = Patient::find($journalEntry->patient_id);
         if (!$journalEntry) {
             Log::error("Entry not found with ID: $id");
             return back()->with('error', 'Entry not found');
         }
-    
+
         try {
             $journalEntry->delete();
-            return redirect()->back()->with('message', 'Entry deleted successfully');
-
+            return redirect()->route('patients.show', $patient)->with('message', 'Entry deleted successfully');
         } catch (\Exception $e) {
             Log::error('Error deleting entry: ' . $e->getMessage());
             return back()->with('error', 'Error deleting entry: ' . $e->getMessage());
         }
     }
-    
 
-// Method to show deleted entries for a patient
-public function showDeleted($patientID)
-{
-   /* if (!auth()->user()->isAdmin()) {
+
+    // Method to show deleted entries for a patient
+    public function showDeleted($patientID)
+    {
+        /* if (!auth()->user()->isAdmin()) {
         abort(403); // Unauthorized access control
     }*/
 
-    $patient = Patient::findOrFail($patientID);
-    $deletedEntries = JournalEntry::onlyTrashed()->where('patient_id', $patientID)
-        ->with(['files' => function ($query) {
-            $query->withTrashed(); // Include trashed files if necessary
-        }])->get();
+        $patient = Patient::findOrFail($patientID);
+        $deletedEntries = JournalEntry::onlyTrashed()->where('patient_id', $patientID)
+            ->with(['files' => function ($query) {
+                $query->withTrashed(); // Include trashed files if necessary
+            }])->get();
 
-    return view('entry.deleted', ['deletedEntries' => $deletedEntries, 'patient' => $patient]);
-}
+        return view('entry.deleted', ['deletedEntries' => $deletedEntries, 'patient' => $patient]);
+    }
 
 
-// Method to restore a deleted entry
-public function restore($id)
-{
-    /*if (!auth()->user()->isAdmin()) {
-        abort(403); 
+    // Method to restore a deleted entry
+    public function restore($id)
+    {
+        /*if (!auth()->user()->isAdmin()) {
+        abort(403);
     }*/
 
-    $entry = JournalEntry::onlyTrashed()->findOrFail($id);
-    $entry->restore();
+        $entry = JournalEntry::onlyTrashed()->findOrFail($id);
+        $entry->restore();
 
-    return redirect()->route('entries.show', $entry->id)->with('message', 'Entry restored successfully.');
-}
-
-
+        return redirect()->route('entries.show', $entry->id)->with('message', 'Entry restored successfully.');
+    }
 }

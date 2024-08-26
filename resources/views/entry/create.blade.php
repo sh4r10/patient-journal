@@ -19,7 +19,7 @@
                     <div class="label">
                         <span class="label-text">Entry Description</span>
                     </div>
-                    <textarea class="w-full rounded-sm mb-4 mt-2 textarea textarea-bordered h-48" placeholder="Description" name="description" required></textarea>
+                    <textarea rows=5 class="w-full rounded-sm mb-4 mt-2 textarea textarea-bordered h-48" placeholder="Description" name="description" required></textarea>
                 </label>
                 <label>Attach Files</label>
                 <input type="file" name="files[]" class="mt-4 file-input file-input-bordered file-input-md w-full" multiple />

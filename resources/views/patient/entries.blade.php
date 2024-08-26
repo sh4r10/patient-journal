@@ -97,15 +97,6 @@
                             @endif
                             @endforeach
                         </div>
-                        <!--
-                        <div class="space-x-2">
-                            <form action="{{ route('entries.destroy', $entry->id) }}" method="POST" onsubmit="return confirm('Are you sure?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline btn-error">Delete</button>
-                            </form>
-                        </div>
-                        -->
                     </div>
                     <div class="text-gray-600 font-bold mt-4 flex justify-end gap-4 text-xs">
                         <p class="format-date" data-date="{{$entry->updated_at}}">Updated </p>
@@ -132,21 +123,24 @@
         </dialog>
     </div>
 </div>
-        <!-- Video Modal -->
-        <div id="video_modal" class="hidden fixed z-30 left-0 top-0 w-full h-full
-        bg-black bg-opacity-70 flex justify-center items-center"
-        onclick="closeVideoModal()">
-            <div class="modal-box max-w-screen-xl w-full flex justify-center items-center">
-                <video id="modal-video" class="w-full aspect-video" controls>
-                    Your browser does not support the video tag.
-                </video>
-            </div>
+    <!-- Video Modal -->
+    <div id="video_modal" class="cursor-pointer hidden fixed z-30 left-0 top-0 w-full h-full
+    bg-black bg-opacity-70 flex justify-center items-center"
+    onclick="closeVideoModal()">
+        <div onclick="(function(event){event.stopPropagation();})(event);" class="cursor-default modal-box max-w-screen-xl w-full flex justify-center items-center">
+            <video id="modal-video" class="w-full aspect-video" controls>
+                Your browser does not support the video tag.
+            </video>
         </div>
+    </div>
 
-        <!-- Image Modal -->
-        <div id="image_modal" class="hidden fixed z-30 left-0 top-0 w-full h-full
-        bg-black bg-opacity-70 flex justify-center items-center"
-        onclick="closeImageModal()">
-            <img class="max-w-screen-xl m-auto w-full" id="modal-image" />
+    <!-- Image Modal -->
+    <div id="image_modal" class="p-24 cursor-pointer hidden fixed z-30 left-0 top-0 w-full h-full
+    bg-black bg-opacity-70 flex justify-center items-center"
+    onclick="closeImageModal()">
+    <div onclick="(function(event){event.stopPropagation();})(event);"
+    class=" cursor-default flex items-center justify-center bg-white max-w-screen-xl m-auto w-full">
+        <img id="modal-image" />
         </div>
+    </div>
 </x-app-layout>
