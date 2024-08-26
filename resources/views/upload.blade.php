@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload File</title>
     <!-- Include Tailwind CSS or any other CSS framework if needed -->
 </head>
+
 <body>
     <div class="container">
         <h1>Upload a File</h1>
 
         <!-- Display Success Message -->
-        @if(session('message'))
+        @if (session('message'))
             <div class="alert alert-success">
                 {{ session('message') }}
             </div>
@@ -53,4 +55,5 @@
         </form>
     </div>
 </body>
+
 </html>
