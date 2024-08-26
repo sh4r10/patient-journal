@@ -9,14 +9,14 @@
                 @csrf
                 <div class="flex gap-6 mt-4 mb-8">
                     <label class="w-full">
-                        <div class="label">
+                        <div class="text-sm text-slate-600 mb-2">
                             <span class="label-text">Name</span>
                         </div>
                         <input type="text" name="name" placeholder="Patient Name"
                         class="rounded mt-2 focus:border-slate-500 focus:ring-0 w-full" required />
                     </label>
                     <label class="w-full">
-                        <div class="label">
+                        <div class="text-sm text-slate-600 mb-2>
                             <span class="label-text">Personnummer</span>
                         </div>
                         <input type="text" name="personnummer"
@@ -25,14 +25,14 @@
                 </div>
                 <div class="flex gap-6 mb-8">
                     <label class="w-full">
-                        <div class="label">
+                        <div class="text-sm text-slate-600 mb-2>
                             <span class="label-text">Email</span>
                         </div>
                         <input type="email" name="email"
                         placeholder="patient@dr.com" class="rounded mt-2 focus:border-slate-500 focus:ring-0 w-full" required />
                     </label>
                     <label class="w-full">
-                        <div class="label">
+                        <div class="text-sm text-slate-600 mb-2>
                             <span class="label-text">Phone</span>
                         </div>
                         <input type="text" name="phone"
@@ -41,7 +41,7 @@
                 </div>
                 <div class="flex gap-6">
                     <label class="w-full">
-                        <div class="label">
+                        <div class="text-sm text-slate-600 mb-2>
                             <span class="label-text">Treatments</span>
                         </div>
                         <p class="w-full bg-blue-100 p-4 text-blue-900

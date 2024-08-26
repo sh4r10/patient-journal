@@ -10,6 +10,21 @@
         }
         humanizeDates();
     });
+    function showFilterModal(){
+        const filter_modal = document.getElementById("filter-modal");
+        filter_modal.classList.remove("hidden");
+        filter_modal.classList.add("block");
+        document.body.classList.add("overflow-hidden");
+    }
+
+    function closeFilterModal(){
+        const filter_modal = document.getElementById("filter-modal");
+        filter_modal.classList.add("hidden");
+        filter_modal.classList.remove("block");
+        document.body.classList.remove("overflow-hidden");
+    }
+
+
 </script>
 <x-app-layout>
     <div class="mt-16 max-w-screen-xl mx-auto">
@@ -32,17 +47,24 @@
                 </form>
                 <button type="button" class="rounded px-6 py-2 bg-yellow-50
                 border border-yellow-300
-                text-yellow-800 hover:bg-yellow-100 drop-shadow-sm" onclick="document.getElementById('filter-modal').showModal()">Filter</button>
+                text-yellow-800 hover:bg-yellow-100 drop-shadow-sm"
+                onclick="showFilterModal()">Filter</button>
             </div>
             <a href="{{ route('patients.create') }}" class="drop-shadow
             bg-blue-950 hover:bg-blue-900 text-white rounded-sm py-2 px-8">Add Patient</a>
         </div>
 
         <!-- Filter Modal -->
-        <dialog id="filter-modal" class="modal">
-        <form method="GET" action="{{ route('patients.index') }}" class="modal-box">
-            <h3 class="font-bold text-lg">Select Treatments</h3>
-            <div class="flex flex-wrap gap-4 mb-4">
+        <div id="filter-modal" class="p-24 cursor-pointer hidden fixed z-30 left-0 top-0 w-full h-full
+    bg-black bg-opacity-70 flex justify-center items-center"
+    onclick="closeFilterModal()">
+        <form method="GET" action="{{ route('patients.index') }}" class="p-16
+        cursor-default flex flex-col gap-4 items-start justify-center bg-white
+        max-w-screen-sm m-auto w-full rounded"
+        onclick="(function(event){event.stopPropagation();})(event);">
+            <h3 class="font-semibold text-xl">Filter by treatment</h3>
+            <div class="flex flex-col gap-4 mb-4 max-h-96 overflow-scroll w-full
+            border border-slate-200 p-4">
                 @foreach($allTreatments as $treatment)
                     <label class="flex items-center space-x-2">
                         <input type="checkbox" name="treatments[]" value="{{ $treatment->id }}" />
@@ -50,12 +72,16 @@
                     </label>
                 @endforeach
             </div>
-            <div class="modal-action">
-                <button type="submit" class="btn btn-primary">Apply</button>
-                <button type="button" class="btn" onclick="document.getElementById('filter-modal').close()">Cancel</button>
+            <div class="w-full flex flex-row-reverse justify-start items-center
+            text-sm gap-2">
+                <button type="submit" class="drop-shadow bg-yellow-700
+                hover:bg-yellow-800 text-white border border-yellow-700 rounded-sm py-2 px-8">Filter</button>
+                <button type="button" class="border border-yellow-500 bg-white
+                hover:bg-yellow-50
+                    text-yellow-700 rounded-sm py-2 px-8" onclick="closeFilterModal()">Cancel</button>
             </div>
         </form>
-        </dialog>
+        </div>
 
         <div class="overflow-x-auto mt-6 bg-slate-50 border border-slate-300 rounded-sm">
             <table class="table text-base w-full">

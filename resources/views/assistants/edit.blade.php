@@ -1,4 +1,24 @@
 <x-app-layout>
+    <div class="container mx-auto mt-16">
+        <div class="flex justify-center">
+            <div class="w-full max-w-md">
+    <h1 class="text-2xl mb-4">Create new Assistant</h1>
+            @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
     <form method="POST" action="{{ route('assistants.update', $user) }}">
         @csrf
         @method('PUT')
@@ -35,17 +55,27 @@
         <!-- Role -->
         <div class="mt-4">
             <x-input-label for="role" :value="__('Role')" />
-            <select id="role" name="role" class="block mt-1 w-full">
+            <select id="role" name="role" class="rounded block mt-1 w-full">
                 <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
                 <option value="assistant" {{ $user->role == 'assistant' ? 'selected' : '' }}>Assistant</option>
             </select>
             <x-input-error :messages="$errors->get('role')" class="mt-2" />
         </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button class="ms-4">
-                {{ __('Update User') }}
-            </x-primary-button>
+        <div class="w-full flex flex-row-reverse justify-start items-center gap-4 mt-8">
+            <button type="submit" class="drop-shadow bg-blue-950
+            hover:bg-blue-900 text-white rounded-sm py-2 px-8">Update</button>
+            <a class="border border-blue-950 bg-white hover:bg-slate-200
+            text-blue-950 rounded-sm py-2 px-8" href="{{
+            route('assistants.index') }}">Cancel</a>
         </div>
+
     </form>
+
+
+            </div>
+        </div>
+    </div>
 </x-app-layout>
+
+
+

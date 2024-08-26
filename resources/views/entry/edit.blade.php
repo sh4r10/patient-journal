@@ -148,7 +148,7 @@
 
     <!-- Video Modal -->
     <div id="video_modal" class="cursor-pointer hidden fixed z-30 left-0 top-0 w-full h-full
-    bg-black bg-opacity-70 flex justify-center items-center"
+    bg-black bg-opacity-70 overflow-scroll flex justify-center items-center"
     onclick="closeVideoModal(event)">
         <div onclick="(function(event){event.stopPropagation();})(event);" class="cursor-default modal-box max-w-screen-xl w-full flex justify-center items-center">
             <video id="modal-video" class="w-full aspect-video" controls>
@@ -159,7 +159,7 @@
 
     <!-- Image Modal -->
     <div id="image_modal" class="p-24 cursor-pointer hidden fixed z-30 left-0 top-0 w-full h-full
-    bg-black bg-opacity-70 flex justify-center items-center"
+    bg-black overflow-scroll bg-opacity-70 flex justify-center items-center"
     onclick="closeImageModal(event)">
     <div onclick="(function(event){event.stopPropagation();})(event);"
     class=" cursor-default flex items-center justify-center bg-white max-w-screen-xl m-auto w-full">

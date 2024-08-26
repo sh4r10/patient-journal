@@ -10,7 +10,7 @@
                 @csrf
                 @method('PUT')
                 <div class="flex gap-6 mb-4">
-                    <label class="form-control w-full">
+                    <label class="form-control w-full text-sm">
                         <div class="label text-slate-600 mb-2">
                             <span class="label-text">Name</span>
                         </div>
@@ -20,7 +20,7 @@
                 </div>
                 <div class="flex gap-6 mb-4">
                     <label class="form-control w-full">
-                        <div class="label text-slate-600 mb-2">
+                        <div class="label text-slate-600 mb-2 text-sm">
                             <span class="label-text">Description</span>
                         </div>
                         <textarea rows=10 name="description" class="w-full

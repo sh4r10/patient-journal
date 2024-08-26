@@ -41,7 +41,7 @@ class PatientController extends Controller
         }
 
         $patients = $query->orderBy('created_at', 'desc')->paginate(10);
-        $allTreatments = Treatment::all();
+        $allTreatments = Treatment::query()->orderBy('name', 'asc')->get();
 
         return view('patient.index', ['patients' => $patients, 'allTreatments' => $allTreatments]);
     }

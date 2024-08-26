@@ -74,14 +74,14 @@
                         @method('PUT')
                         <div class="flex gap-6 mt-4 mb-8 w-full">
                             <label class="w-full">
-                                <div class="label text-slate-600 mb-2">
+                                <div class="label text-slate-600 mb-2 text-sm">
                                     <span class="label-text">Name</span>
                                 </div>
                                 <input type="text" class="rounded w-full" name="name"
                                                    value={{$patient->name}} class="mt-2 focus:border-slate-500 focus:ring-0 w-full" required />
                             </label>
                             <label class="w-full">
-                                <div class="label text-slate-600 mb-2">
+                                <div class="label text-slate-600 mb-2 text-sm">
                                     <span class="label-text">Personnummer</span>
                                 </div>
                                 <input type="text" class="rounded w-full" name="personnummer"
@@ -90,14 +90,14 @@
                         </div>
                         <div class="flex gap-6 mb-8">
                             <label class="w-full">
-                                <div class="label text-slate-600 mb-2">
+                                <div class="label text-slate-600 mb-2 text-sm">
                                     <span class="label-text">Email</span>
                                 </div>
                                 <input type="email" class="rounded w-full" name="email"
                                                     value={{$patient->email}} class="mt-2 focus:border-slate-500 focus:ring-0 w-full" required />
                             </label>
                             <label class="w-full">
-                                <div class="label text-slate-600 mb-2">
+                                <div class="label text-slate-600 mb-2 text-sm">
                                     <span class="label-text">Phone</span>
                                 </div>
                                 <input type="text" class="rounded w-full" name="phone"
