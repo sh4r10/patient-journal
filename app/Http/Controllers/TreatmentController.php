@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Treatment;
 use App\Models\Patient;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 class TreatmentController extends Controller
 {
     public function index(Request $request)
@@ -61,7 +61,8 @@ class TreatmentController extends Controller
     }
 
     public function destroy(Treatment $treatment)
-    {
+    {    
+        $treatment->deleted_by = Auth::user()->email;
         $treatment->delete();
 
         return redirect()->route('treatments.index')->with('success', 'Treatment deleted successfully.');

@@ -156,6 +156,7 @@ class PatientController extends Controller
         $patient = Patient::findOrFail($id);
 
         try {
+            $patient->deleted_by = Auth::user()->email;
             // Soft delete the patient, which should cascade to entries and files
             $patient->delete();  // This should trigger soft deletion of entries
             return redirect()->route('patients.index')->with('message', 'Patient deleted successfully');

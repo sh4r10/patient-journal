@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 class JournalEntry extends Model
 {
     use HasFactory,SoftDeletes; //  SoftDeletes trait;
@@ -16,8 +17,10 @@ class JournalEntry extends Model
 
     protected static function booted() {
         static::deleting(function ($entry) {
+            $userEmail = auth()->user()->email;
             foreach ($entry->files as $file) {
-                $file->delete();  // This soft deletes the file
+                $file->deleted_by = $userEmail; // Set the deleted_by field
+                $file->save(); $file->delete();  // This soft deletes the file
             }
         });
 

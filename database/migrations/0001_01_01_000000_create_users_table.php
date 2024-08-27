@@ -15,6 +15,10 @@ return new class extends Migration
             $table->string('role'); // Ensure this field is present
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes(); 
+            $table->string('deleted_by')->nullable()->after('deleted_at'); // Adds 'deleted_by' column after 'deleted_at'
+
+           
         });
 
         Schema::create('sessions', function (Blueprint $table) {

@@ -15,6 +15,7 @@ return new class extends Migration
              $table->foreignId('journal_entry_id')->constrained('journal_entries')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes(); // Adds 'deleted_at' column
+            $table->string('deleted_by')->nullable()->after('deleted_at');
         });
     }
 

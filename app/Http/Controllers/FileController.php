@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\File;
 use App\Models\JournalEntry;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class FileController extends Controller
 {
@@ -68,9 +69,10 @@ class FileController extends Controller
         if (Storage::disk('local')->exists($file->path)) {
             Storage::disk('local')->delete($file->path);
         }
+        $file->deleted_by = Auth::user()->email;
         $file->delete();
 
-        Log::info('File deleted successfully.', ['file_id' => $fileID]);
+        
 
         return redirect()->route('entries.edit', $file->journal_entry_id)
                          ->with('success', 'File deleted successfully.');

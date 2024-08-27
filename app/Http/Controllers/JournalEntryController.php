@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 class JournalEntryController extends Controller
 {
     /**
@@ -97,7 +98,7 @@ class JournalEntryController extends Controller
      */
     public function update(Request $request, string $entryID)
     {
-        Log::info('Update Entry Request', $request->all());
+ 
 
         // Validate the request
         $request->validate([
@@ -107,7 +108,7 @@ class JournalEntryController extends Controller
             'patient_id' => 'required|string',
         ]);
 
-        DB::beginTransaction();
+      
 
         try {
             // Find the journal entry and patient
@@ -137,14 +138,12 @@ class JournalEntryController extends Controller
                 }
             }
 
-            DB::commit();
-            Log::info('Entry Updated Successfully', ['entry_id' => $journal_entry->id]);
+          
 
             // Redirect with success message
             return redirect()->route('patients.show', ['patient' => $patient->id])->with('message', 'Entry updated successfully.');
         } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Failed to update entry', ['error' => $e->getMessage()]);
+           
             return redirect()->back()->with('error', 'Failed to update entry.');
         }
     }
@@ -162,21 +161,21 @@ class JournalEntryController extends Controller
      */
     public function destroy($id) // Temporarily use $id instead of type-hinted model
     {
-        Log::info('Path being accessed', ['path' => request()->path()]);
-        Log::info('ID Received for Deletion: ', ['id' => $id]);
+       
     
         $journalEntry = JournalEntry::find($id);
         if (!$journalEntry) {
-            Log::error("Entry not found with ID: $id");
+           
             return back()->with('error', 'Entry not found');
         }
     
         try {
+            $journalEntry->deleted_by = Auth::user()->email;
             $journalEntry->delete();
             return redirect()->back()->with('message', 'Entry deleted successfully');
 
         } catch (\Exception $e) {
-            Log::error('Error deleting entry: ' . $e->getMessage());
+           
             return back()->with('error', 'Error deleting entry: ' . $e->getMessage());
         }
     }

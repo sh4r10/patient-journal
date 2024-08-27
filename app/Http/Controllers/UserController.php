@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -131,7 +132,8 @@ class UserController extends Controller
         if ($user->id === $firstUser->id) {
             return redirect()->route('assistants.index')->with('error', 'Cannot delete the main user.');
         }
-    
+        $user->deleted_by = Auth::user()->email; // Set the deleted_by field to the current user's email
+        $user->save();
         $user->delete();
         return redirect()->route('assistants.index')->with('success', 'User deleted successfully.');
     }
