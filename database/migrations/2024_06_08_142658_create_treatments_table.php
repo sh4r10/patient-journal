@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('description');
             $table->timestamps();
+            $table->softDeletes(); 
+            $table->string('deleted_by')->nullable()->after('deleted_at');
         });
 
         Schema::create('patient_treatment', function (Blueprint $table) {
@@ -24,13 +26,17 @@ return new class extends Migration
             $table->foreignId('patient_id')->constrained()->onDelete('cascade');
             $table->foreignId('treatment_id')->constrained()->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes(); 
+            $table->string('deleted_by')->nullable()->after('deleted_at');
         });
     }
 
     public function down(): void
     {
         // Drop the table first
-        Schema::dropIfExists('patient_treatment');
+        Schema::dropIfExists('patient_treatment', function (Blueprint $table) {
+            $table->dropColumn('deleted_by');
+        });
         Schema::dropIfExists('treatments');
     }
 };

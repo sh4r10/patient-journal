@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('patient_id')->constrained('patients')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes(); // Adds the 'deleted_at' column
+            $table->string('deleted_by')->nullable()->after('deleted_at');
         });
 
         

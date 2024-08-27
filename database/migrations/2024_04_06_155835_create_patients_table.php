@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('phone');
             $table->timestamps();
             $table->softDeletes();      //  Adds 'deleted_at' column
+            $table->string('deleted_by')->nullable()->after('deleted_at');
         });
        
     }
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     { 
-        Schema::dropIfExists('journal_entries');
+        Schema::dropIfExists('patients');
     }
 };

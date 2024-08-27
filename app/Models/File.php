@@ -21,4 +21,13 @@ class File extends Model
     {
         return $this->belongsTo(JournalEntry::class, 'journal_entry_id', 'id');
     }
+
+
+    protected static function booted()
+    {
+        static::deleting(function ($file) {
+            $userEmail = auth()->user()->email;
+            $file->save();
+        });
+    }
 }

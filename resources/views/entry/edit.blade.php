@@ -105,55 +105,51 @@
                 </div>
             @endforeach
         </div>
-        <div>
-            <h2 class="text-xl text-slate-700 mt-8 mb-4">Edit Entry</h2>
-            <form action="{{ route('entries.update', $journalEntry->id) }}" method="POST" class="w-full"
-                enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
-                <input type="hidden" name="patient_id" value="{{ $patient->id }}" />
-                @csrf
-                <label class="form-control w-full">
-                    <div class="label">
-                        <span class="label-text">Title</span>
-                    </div>
-                    <input type="text" name="title" value="{{ $journalEntry->title }}" autofocus
-                        class="rounded-sm mb-4 mt-2 input input-bordered w-full" required />
-                </label>
-                <label class="form-control">
-                    <div class="label">
-                        <span class="label-text">Entry Description</span>
-                    </div>
-                    <textarea class="w-full rounded-sm mb-4 mt-2 textarea textarea-bordered h-48" name="description" rows=5 required>{{ $journalEntry->description }}</textarea>
-                </label>
-                <label>Attach Additional Files</label>
-                <input type="file" name="files[]" class="mt-4 file-input file-input-bordered file-input-md w-full"
-                    multiple />
-                <div class="w-full flex flex-wrap flex-row-reverse justify-between items-center gap-4 mt-8">
-                    <div class="flex flex-row-reverse gap-2 flex-wrap">
-                        <button type="submit"
-                            class="drop-shadow bg-blue-950
+        <h2 class="text-xl text-slate-700 mt-8 mb-4">Edit Entry</h2>
+        <form action="{{ route('entries.update', $journalEntry->id) }}" method="POST" class="w-full"
+            enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+            <input type="hidden" name="patient_id" value="{{ $patient->id }}" />
+            <label class="form-control w-full">
+                <div class="label">
+                    <span class="label-text">Title</span>
+                </div>
+                <input type="text" name="title" value="{{ $journalEntry->title }}" autofocus
+                    class="rounded-sm mb-4 mt-2 input input-bordered w-full" required />
+            </label>
+            <label class="form-control">
+                <div class="label">
+                    <span class="label-text">Entry Description</span>
+                </div>
+                <textarea class="w-full rounded-sm mb-4 mt-2 textarea textarea-bordered h-48" name="description" rows=5 required>{{ $journalEntry->description }}</textarea>
+            </label>
+            <label>Attach Additional Files</label>
+            <input type="file" name="files[]" class="mt-4 file-input file-input-bordered file-input-md w-full"
+                multiple />
+            <div class="w-full flex flex-wrap flex-row-reverse justify-between items-center gap-4 mt-8">
+                <div class="flex flex-row-reverse gap-2 flex-wrap">
+                    <button type="submit"
+                        class="drop-shadow bg-blue-950
                         hover:bg-blue-900 text-white rounded-sm py-2 px-8">Update</button>
-                        <a class="border border-blue-950 bg-white hover:bg-slate-200
+                    <a class="border border-blue-950 bg-white hover:bg-slate-200
                         text-blue-950 rounded-sm py-2 px-8"
-                            href="{{ route('patients.show', $patient) }}">Cancel</a>
-                    </div>
-                    <button
-                        class="bg-red-50
+                        href="{{ route('patients.show', $patient) }}">Cancel</a>
+                </div>
+                <button
+                    class="bg-red-50
                     hover:bg-red-100 border border-red-200 text-red-900 rounded-sm py-2
                     px-8"
-                        onClick="deleteEntry(event)">Delete Entry</button>
-                </div>
-            </form>
-        </div>
+                    onClick="deleteEntry(event)">Delete Entry</button>
+            </div>
+        </form>
     </div>
-
+    </div>
     <form id="delete-entry-form" class="hidden" action="{{ route('entries.destroy', $journalEntry->id) }}"
         method="POST">
         @csrf
         @method('DELETE')
     </form>
-
     <!-- Video Modal -->
     <div id="video_modal"
         class="cursor-pointer hidden fixed z-30 left-0 top-0 w-full h-full

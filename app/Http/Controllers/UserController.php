@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -39,43 +40,56 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::query()->paginate(10);
-        return view('assistants.index', compact('users'));
+        // Find the first registered user
+        $firstUser = User::orderBy('created_at', 'asc')->first();
+
+        // Exclude the first registered user from the list
+        $users = User::where('id', '!=', $firstUser->id)->paginate(10);
+
+        return view('assistants.index', compact('users', 'firstUser'));
     }
+
 
     public function create()
     {
+
+        if (!Auth::user()->isAdmin()) {
+            return redirect()->route('patients.index')->with('error', 'You do not have permission to access this page.');
+        }
         return view('assistants.create');
     }
 
-   
+
     public function store(Request $request)
     {
-        \Log::info('Store method called');
-        
+        Log::info('Store method called');
+        if (!Auth::user()->isAdmin()) {
+            return redirect()->route('patients.index')->with('error', 'You do not have permission to create users.');
+        }
+
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
             'role' => 'required|in:assistant,admin',
         ]);
-    
-        \Log::info('Validated data:', $validatedData);
-    
+
+        Log::info('Validated data:', $validatedData);
+
         User::create([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'password' => bcrypt($validatedData['password']),
             'role' => $validatedData['role'],
         ]);
-    
+
         \Log::info('User created successfully');
-    
+
         return redirect()->route('assistants.index')->with('success', 'User created successfully.');
     }
-    
-    
-    
+
+
+
 
     public function edit(User $user)
     {
@@ -84,6 +98,11 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
+
+        if (!Auth::user()->isAdmin()) {
+            return redirect()->route('patients.index')->with('error', 'You do not have permission to update users.');
+        }
+
         $request->validate([
             'username' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
@@ -104,6 +123,18 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        if (!Auth::user()->isAdmin()) {
+            return redirect()->route('patients.index')->with('error', 'You do not have permission to delete users.');
+        }
+        // Find the first registered user
+        $firstUser = User::orderBy('created_at', 'asc')->first();
+
+        // Prevent deletion of the first registered user
+        if ($user->id === $firstUser->id) {
+            return redirect()->route('assistants.index')->with('error', 'Cannot delete the main user.');
+        }
+        $user->deleted_by = Auth::user()->email; // Set the deleted_by field to the current user's email
+        $user->save();
         $user->delete();
         return redirect()->route('assistants.index')->with('success', 'User deleted successfully.');
     }
