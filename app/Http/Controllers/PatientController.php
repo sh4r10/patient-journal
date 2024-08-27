@@ -6,6 +6,8 @@ use App\Models\JournalEntry;
 use App\Models\Patient;
 use App\Models\Treatment;
 use Illuminate\Http\Request;
+use App\Models\Note;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\TreatmentController;
@@ -58,23 +60,7 @@ class PatientController extends Controller
         return view('patient.create', compact('treatments'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    /*
-    public function store(Request $request)
-    {
-        $data = $request->validate([
-            'name' => ['required', 'string'],
-            'personnummer' => ['required', 'string'],
-            'email' => ['required', 'string'],
-            'phone' => ['required', 'string'],
-        ]);
 
-        $patient = Patient::create($data);
-
-        return to_route('patients.show', $patient)->with('message', 'Patient created successfully');
-    }*/
     public function store(Request $request)
     {
         $request->validate([
@@ -151,6 +137,11 @@ class PatientController extends Controller
      */
     public function destroy(Request $request, string $id)
     {
+        
+         // Check if the user is an admin
+    if (!Auth::user()->isAdmin()) {
+        return redirect()->route('patients.index')->with('error', 'You do not have permission to delete patients.');
+    }
         // Validate the user's password
         if (!Auth::guard('web')->validate([
             'email' => $request->user()->email,
@@ -216,30 +207,59 @@ class PatientController extends Controller
     }
     
     public function storeNote(Request $request, $id)
-    {
-        $request->validate([
-            'content' => 'required|string',
-        ]);
-    
-        $patient = Patient::findOrFail($id);
-        $patient->notes()->create([
-            'content' => $request->input('content'),
-            'created_at' => now(),
-        ]);
-    
-        return redirect()->route('patients.notes', $id);
-    }
-    
-    public function assignTreatment(Request $request, Patient $patient)
-    {
-        $request->validate([
-            'treatment_id' => 'required|exists:treatments,id',
-        ]);
+{
+    $request->validate([
+        'content' => 'required|string',
+    ]);
 
-        $patient->treatments()->attach($request->input('treatment_id'));
+    $patient = Patient::findOrFail($id);
+    $patient->notes()->create([
+        'content' => $request->input('content'),
+        'created_at' => now(),
+    ]);
 
-        return redirect()->route('patients.treatments', $patient)->with('message', 'Treatment assigned successfully.');
+    return redirect()->route('patients.notes', $id)->with('message', 'Note added successfully!');
+}
+
+    
+    
+
+public function destroyNote($id)
+{
+    $note = Note::findOrFail($id);
+    $patientId = $note->patient_id;
+    $note->delete();
+
+    return redirect()->route('patients.notes', $patientId)->with('message', 'Note deleted successfully!');
+}
+
+    
+
+
+
+
+public function assignTreatment(Request $request, Patient $patient)
+{
+    // Validate input
+    $request->validate([
+        'treatment_id' => 'required|exists:treatments,id',
+    ]);
+
+    $treatmentId = $request->input('treatment_id');
+
+    // Check if the treatment is already assigned to the patient
+    if ($patient->treatments()->where('treatments.id', $treatmentId)->exists()) {
+        return redirect()->route('patients.treatments', $patient->id)
+                         ->with('error', 'This treatment is already assigned to the patient.');
     }
+
+    // Assign the treatment
+    $patient->treatments()->attach($treatmentId);
+
+    return redirect()->route('patients.treatments', $patient->id)
+                     ->with('success', 'Treatment assigned successfully.');
+}
+
 
     
     public function unassignTreatment(Patient $patient, Treatment $treatment)

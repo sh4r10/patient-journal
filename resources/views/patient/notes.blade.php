@@ -26,13 +26,19 @@
             @if($notes->isEmpty())
                 <p class="text-gray-500">No notes available.</p>
             @else
-                <ul class="list-disc pl-5 space-y-4">
+                <ul class="list-none space-y-4">
                     @foreach($notes as $note)
-                        <li class="flex flex-col border-b border-gray-200 pb-4">
-                            <div class="flex justify-between items-start">
+                        <li class="flex items-start justify-between p-4 border border-gray-200 rounded-lg shadow-md hover:bg-gray-50 transition-colors duration-300">
+                            <div class="flex-1">
                                 <p class="text-gray-800 text-lg font-semibold">{{ $note->content }}</p>
                                 <span class="text-sm text-gray-500">{{ $note->created_at->format('d M Y') }}</span>
                             </div>
+                            <!-- Delete Button -->
+                            <form method="POST" action="{{ route('patients.notes.destroy', $note->id) }}" onsubmit="return confirm('Are you sure you want to delete this note?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-500 hover:text-red-700 text-sm ml-4">Delete</button>
+                            </form>
                         </li>
                     @endforeach
                 </ul>
@@ -40,3 +46,37 @@
         </div>
     </div>
 </x-app-layout>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Prevent multiple form submissions
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function (event) {
+                const submitButton = event.target.querySelector('button[type="submit"]');
+                if (submitButton) {
+                    submitButton.disabled = true;  // Disable the submit button to prevent multiple clicks
+                    setTimeout(() => submitButton.disabled = false, 1000);  // Re-enable after 1 second
+                }
+            });
+        });
+
+        // Handle form reset on navigation
+        window.addEventListener('popstate', function () {
+            console.log('Navigated back');
+            document.querySelectorAll('form').forEach(form => form.reset());
+        });
+
+        // Debug form submissions and button clicks
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function () {
+                console.log('Form submitted');
+            });
+        });
+
+        document.querySelectorAll('button[type="submit"]').forEach(button => {
+            button.addEventListener('click', function () {
+                console.log('Submit button clicked');
+            });
+        });
+    });
+</script>

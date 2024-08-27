@@ -71,13 +71,17 @@
                                                    value={{$patient->phone}} class="mt-2 focus:border-slate-500 focus:ring-0 w-full" required />
                             </label>
                         </div>
+                       
                         <div class="w-full flex flex-row-reverse justify-between items-center gap-4 mt-4">
                             <div class="flex flex-row-reverse">
                                 <button class="btn btn-wide btn-primary">Update</button>
                                 <a class="btn btn-ghost" href="{{ route('patients.index') }}">Cancel</a>
                             </div>
+                            @if(Auth::check() && Auth::user()->isAdmin())
                             <a href="#" onClick="delete_confirmation.show()">Delete</a>
+                            @endif
                         </div>
+                       
                     </form>
                 </div>
             </div>
