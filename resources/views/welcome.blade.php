@@ -912,7 +912,7 @@
             <button> Log out</button>
         </form>
     @else
-        <form method="post" action={{ route('users.login') }} class="w-full">
+        <form method="post" action={{ route('login') }} class="w-full">
             @csrf
 
         </form>
