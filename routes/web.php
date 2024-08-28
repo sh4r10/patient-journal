@@ -9,10 +9,6 @@ use App\Http\Controllers\TreatmentController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\UserController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 // TODO: fix this to avoid double redirect
 Route::redirect('/', '/patients')->middleware('auth')->name('dashboard');
 
