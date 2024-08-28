@@ -10,7 +10,7 @@ class CommonLogFormatter extends LineFormatter
     public function __construct()
     {
         // Define a basic format string that will be manually replaced
-        $format = "%remote_addr% - %user% (%role%) [%datetime%] \"%method% %url% HTTP/%http_version%\" %status% %response_size%\n";
+        $format = "%remote_addr% - %user% (%role%) [%datetime%] \"%method% %url% %http_version%\" %status% %response_size%\n";
         parent::__construct(null, null, false, true);
         $this->format = $format;
     }
