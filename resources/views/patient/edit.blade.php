@@ -1,4 +1,8 @@
 <!-- resources/views/patient/edit.blade.php -->
+@php
+    $isAdmin = Auth::check() && Auth::user()->isAdmin();
+@endphp
+
 <script>
     function showDeleteConfirmation(e) {
         e.preventDefault();
@@ -120,12 +124,14 @@
                                 text-blue-950 rounded-sm py-2 px-8"
                                 href="{{ route('patients.show', $patient) }}">Cancel</a>
                         </div>
-                        <button
-                            class="border border-red-200 bg-red-50
+                        @if ($isAdmin)
+                            <button
+                                class="border border-red-200 bg-red-50
                                 hover:bg-red-100 text-red-700 rounded-sm py-2
                                 px-8"
-                            onClick="showDeleteConfirmation(event)">Delete
-                            Patient</button>
+                                onClick="showDeleteConfirmation(event)">Delete
+                                Patient</button>
+                        @endif
                     </div>
                 </form>
             </div>
