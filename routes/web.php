@@ -32,7 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('treatments', TreatmentController::class);
 
     // Journal Entry Routes
-    Route::resource('entries', JournalEntryController::class, ['only' => ['store', 'edit', 'update', 'destroy']]);
+    Route::resource('entries', JournalEntryController::class, ['only' => ['store', 'edit', 'destroy']]);
     Route::get('/entries/create/{patient}', [JournalEntryController::class, 'create'])->name('entries.create');
     Route::get('/entries/deleted', [JournalEntryController::class, 'showDeleted'])->name('entries.deleted');
     Route::post('/entries/restore/{id}', [JournalEntryController::class, 'restore'])->name('entries.restore');
