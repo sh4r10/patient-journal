@@ -12,13 +12,24 @@ class TreatmentController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-        $treatments = Treatment::query()
-            ->when($search, function ($query, $search) {
-                return $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
-            })->orderBy('name', 'asc')->paginate(10);
 
-        return view('treatments.index', compact('treatments'));
+        // Query for treatments with search functionality
+        $treatmentsQuery = Treatment::query();
+
+        if ($search) {
+            $treatmentsQuery->where(function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        $treatments = $treatmentsQuery->orderBy('name', 'asc')->paginate(10);
+
+        // Determine the status for view rendering
+        $noTreatments = Treatment::count() === 0; // Check if no treatments exist
+        $noSearchResults = $search && $treatments->isEmpty(); // Check if search returned no results
+
+        return view('treatments.index', compact('treatments', 'noTreatments', 'noSearchResults'));
     }
 
 

@@ -25,6 +25,7 @@ class PatientController extends Controller
         $treatmentIds = $request->input('treatments', []);
         $query = Patient::query();
 
+        // Build the query based on search input
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
@@ -34,17 +35,31 @@ class PatientController extends Controller
             });
         }
 
+        // Filter by selected treatment IDs if provided
         if (!empty($treatmentIds)) {
             $query->whereHas('treatments', function ($q) use ($treatmentIds) {
                 $q->whereIn('treatment_id', $treatmentIds);
             });
         }
 
+        // Execute the query and paginate results
         $patients = $query->orderBy('created_at', 'desc')->paginate(10);
         $allTreatments = Treatment::query()->orderBy('name', 'asc')->get();
 
-        return view('patient.index', ['patients' => $patients, 'allTreatments' => $allTreatments]);
+        // Determine flags for view
+        $noPatients = $patients->isEmpty() && is_null($search) && empty($treatmentIds); // No patients at all
+        $noSearchResults = $patients->isEmpty() && !is_null($search); // No patients matching search criteria
+        $noTreatmentResults = $patients->isEmpty() && !empty($treatmentIds); // No patients matching treatment criteria
+
+        return view('patient.index', [
+            'patients' => $patients,
+            'allTreatments' => $allTreatments,
+            'noPatients' => $noPatients,
+            'noSearchResults' => $noSearchResults,
+            'noTreatmentResults' => $noTreatmentResults,
+        ]);
     }
+
 
 
 

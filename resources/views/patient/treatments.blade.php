@@ -11,26 +11,30 @@
 
             <!-- Form to Assign a New Treatment -->
             <h2 for="treatment" class="text-lg font-medium text-slate-700 my-4">Add New Treatment</h2>
-            <form method="POST" action="{{ route('patients.assignTreatment', $patient) }}"
-                class="mb-8 flex flex-wrap gap-2">
-                @csrf
-                <div class="flex-grow">
-                    <select name="treatment_id" id="treatment"
-                        class="w-full
+            @if ($allTreatments->isNotEmpty())
+                <form method="POST" action="{{ route('patients.assignTreatment', $patient) }}"
+                    class="mb-8 flex flex-wrap gap-2">
+                    @csrf
+                    <div class="flex-grow">
+                        <select name="treatment_id" id="treatment"
+                            class="w-full
                         rounded-sm min-w-96 p-3
                         text-yellow-800 placeholder-yellow-400 outline-none
                         border-yellow-500 bg-white focus:border-yellow-500 border focus:outline-none focus:ring-0"
-                        required>
-                        @foreach ($allTreatments as $treatment)
-                            <option value="{{ $treatment->id }}">{{ $treatment->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <button type="submit"
-                    class="drop-shadow bg-blue-950 hover:bg-blue-900 text-white rounded-sm py-2 px-8">
-                    Add Treatment
-                </button>
-            </form>
+                            required>
+                            @foreach ($allTreatments as $treatment)
+                                <option value="{{ $treatment->id }}">{{ $treatment->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <button type="submit"
+                        class="drop-shadow bg-blue-950 hover:bg-blue-900 text-white rounded-sm py-2 px-8">
+                        Add Treatment
+                    </button>
+                </form>
+            @else
+                <p class="text-slate-500">There are no treatments for you to assign.</p>
+            @endif
 
             <!-- Display Assigned Treatments -->
             <div class="mt-6">
