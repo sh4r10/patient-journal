@@ -30,8 +30,8 @@
                     @foreach ($notes as $note)
                         <li
                             class="bg-white hover:bg-yellow-50 rounded px-6
-                        py-4 mb-2 drop-shadow-sm">
-                            <div class="flex flex-col justify-between items-start">
+                        py-4 mb-2 drop-shadow-sm flex">
+                            <div class="flex flex-col flex-grow justify-between items-start">
                                 <p class="text-slate-800 text-lg">{{ $note->content }}</p>
                                 <span
                                     class="mt-2 text-sm font-semibold
@@ -43,7 +43,15 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
-                                    class="text-red-500 hover:text-red-700 text-sm ml-4">Delete</button>
+                                    class="bg-red-200
+                        text-red-500 rounded-full hover:bg-red-600
+                        hover:text-white p-1 focus:outline-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
                             </form>
                     @endforeach
                 </ul>
