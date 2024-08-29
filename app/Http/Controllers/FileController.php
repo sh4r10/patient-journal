@@ -53,16 +53,11 @@ class FileController extends Controller
 
     public function destroy(Request $request, string $fileID)
     {
-        Log::info('Attempting to delete file', ['file_id' => $fileID]);
-
         // Check if file exists
         $file = File::find($fileID);
         if (!$file) {
-            Log::error('File not found', ['file_id' => $fileID]);
             return redirect()->back()->with('error', 'File not found.');
         }
-
-        Log::info('File found', ['file_id' => $fileID, 'path' => $file->path]);
 
         // Only delete the file from storage and the database if it exists
         try {
@@ -72,12 +67,9 @@ class FileController extends Controller
             $file->deleted_by = Auth::user()->email;
             $file->delete();
 
-            Log::info('File deleted successfully.', ['file_id' => $fileID]);
-
             return redirect()->route('entries.edit', $file->journal_entry_id)
                 ->with('success', 'File deleted successfully.');
         } catch (\Exception $e) {
-            Log::error('Error deleting file: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Error deleting file.');
         }
     }
@@ -103,4 +95,3 @@ class FileController extends Controller
         return back()->with('success', 'File restored successfully.');
     }
 }
-

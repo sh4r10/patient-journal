@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
 use App\Models\User;
@@ -62,7 +61,6 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        Log::info('Store method called');
         if (!Auth::user()->isAdmin()) {
             return redirect()->route('patients.index')->with('error', 'You do not have permission to create users.');
         }
@@ -74,8 +72,6 @@ class UserController extends Controller
             'role' => 'required|in:assistant,admin',
         ]);
 
-        Log::info('Validated data:', $validatedData);
-
         User::create([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
@@ -83,7 +79,6 @@ class UserController extends Controller
             'role' => $validatedData['role'],
         ]);
 
-        \Log::info('User created successfully');
 
         return redirect()->route('assistants.index')->with('success', 'User created successfully.');
     }

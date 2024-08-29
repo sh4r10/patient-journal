@@ -71,7 +71,7 @@
         </div>
         <h2 class="text-xl text-slate-700 mb-4">Manage Existing Files</h2>
         <div class="flex flex-wrap gap-4">
-            @foreach ($journalEntry->files as $file)
+            @forelse ($journalEntry->files as $file)
                 <div class="relative group">
                     @if (strpos($file->mime, 'video') !== false)
                         <video class="w-24 h-24 rounded object-cover
@@ -103,7 +103,9 @@
                         </button>
                     </form>
                 </div>
-            @endforeach
+            @empty
+                <p class="text-slate-500">This entry does not have any files attached to it.</p>
+            @endforelse
         </div>
         <h2 class="text-xl text-slate-700 mt-8 mb-4">Edit Entry</h2>
         <form action="{{ route('entries.update', $journalEntry->id) }}" method="POST" class="w-full"

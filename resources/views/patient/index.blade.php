@@ -138,7 +138,7 @@
                         @if ($noPatients)
                             <tr class="bg-white border-t border-slate-200 hover:bg-slate-100">
                                 <td colspan="5" class="py-6 px-4 text-center">
-                                    You have not created any patients. Start by
+                                    You have not created any patients yet. Start by
                                     <a class="underline text-blue-700 hover:text-blue-900"
                                         href="{{ route('patients.create') }}">creating</a>
                                     one.
