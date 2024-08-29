@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DeletedDataController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -46,9 +47,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/assistants/create', [UserController::class, 'create'])->name('assistants.create');
         Route::post('/assistants', [UserController::class, 'store'])->name('assistants.store');
         Route::get('/assistants/{user}/edit', [UserController::class, 'edit'])->name('assistants.edit');
-        Route::put('/assistants/{user}', [UserController::class, 'update'])->name('assistants.update');
+        Route::put('/assitants/{user}', [UserController::class, 'update'])->name('assistants.update');
         Route::get('/assistants/{user}', [UserController::class, 'show'])->name('assistants.show');
         Route::delete('/assistants/{user}', [UserController::class, 'destroy'])->name('assistants.destroy');
+        Route::delete('/data/deleted', [DeletedDataController::class, 'permanentlyDeleteDeletedItems'])->name('data.delete');
     });
 });
 

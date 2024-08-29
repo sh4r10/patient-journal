@@ -75,6 +75,7 @@ class TreatmentController extends Controller
     public function destroy(Treatment $treatment)
     {
         $treatment->deleted_by = Auth::user()->email;
+        $treatment->save();
         $treatment->delete();
 
         return redirect()->route('treatments.index')->with('success', 'Treatment deleted successfully.');

@@ -4,7 +4,7 @@
         e.stopPropagation();
         const image_modal = document.getElementById("image_modal");
         const modal_image = document.getElementById("modal-image");
-        modal_image.src = "/" + filePath;
+        modal_image.src = "/uploads/" + filePath;
         image_modal.classList.remove("hidden");
         image_modal.classList.add("block");
         document.body.classList.add("overflow-hidden");
@@ -27,7 +27,7 @@
         video.innerHTML = "";
         const video_modal = document.getElementById('video_modal');
         var source = document.createElement('source');
-        source.setAttribute('src', "/" + filePath);
+        source.setAttribute('src', "/uploads/" + filePath);
         source.setAttribute('type', mime);
         video.appendChild(source);
         video_modal.classList.remove("hidden");
@@ -77,11 +77,11 @@
                         <video class="w-24 h-24 rounded object-cover
                         cursor-pointer"
                             onclick="showVideo(event, '{{ $file->path }}', '{{ $file->mime }}')">
-                            <source src="{{ asset($file->path) }}" type="{{ $file->mime }}">
+                            <source src="{{ '/uploads/' . $file->path }}" type="{{ $file->mime }}">
                             Your browser does not support the video tag.
                         </video>
                     @else
-                        <img src="{{ asset($file->path) }}"
+                        <img src="{{ '/uploads/' . $file->path }}"
                             class="w-24 h-24 rounded object-cover
                         cursor-pointer border-slate-200 border"
                             onclick="showImage(event, '{{ $file->path }}')" alt="Image" />

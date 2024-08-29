@@ -41,7 +41,7 @@ class JournalEntryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'files.*' => 'nullable|mimes:png,jpeg,jpg|max:2048',
+            'files.*' => 'nullable|mimes:png,jpeg,jpg,mp4,mov,avi',
             'title' => 'required|string',
             'description' => 'required|string',
             'patient_id' => 'required|string'
@@ -59,7 +59,7 @@ class JournalEntryController extends Controller
             foreach ($request->file('files') as $file) {
                 $id = Uuid::uuid4();
                 $filename = $id . '.' . $file->getClientOriginalExtension();
-                $path = $file->storeAs('uploads', $filename, 'public'); // Use 'public' disk
+                $path = $file->storeAs('', $filename, 'minio');
 
                 File::create([
                     'id' => $id,
@@ -103,7 +103,7 @@ class JournalEntryController extends Controller
 
         // Validate the request
         $request->validate([
-            'files.*' => 'nullable|file|mimes:png,jpeg,jpg,mp4|max:2048',
+            'files.*' => 'nullable|file|mimes:png,jpeg,jpg,mp4,mov,avi',
             'title' => 'required|string',
             'description' => 'required|string',
             'patient_id' => 'required|string',
@@ -127,7 +127,7 @@ class JournalEntryController extends Controller
                 foreach ($request->file('files') as $file) {
                     $id = Uuid::uuid4();
                     $filename = $id . '.' . $file->getClientOriginalExtension();
-                    $path = $file->storeAs('uploads', $filename, 'public'); // Store file in 'public/uploads'
+                    $path = $file->storeAs('', $filename, 'minio');
 
                     File::create([
                         'id' => $id,
@@ -164,6 +164,7 @@ class JournalEntryController extends Controller
 
         try {
             $journalEntry->deleted_by = Auth::user()->email;
+            $journalEntry->save();
             $journalEntry->delete();
             return redirect()->route('patients.show', $patient)->with('message', 'Entry deleted successfully');
         } catch (\Exception $e) {
@@ -203,4 +204,3 @@ class JournalEntryController extends Controller
         return redirect()->route('entries.show', $entry->id)->with('message', 'Entry restored successfully.');
     }
 }
-

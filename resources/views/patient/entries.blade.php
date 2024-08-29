@@ -4,7 +4,7 @@
     function showImage(filePath) {
         const image_modal = document.getElementById("image_modal");
         const modal_image = document.getElementById("modal-image");
-        modal_image.src = "/" + filePath;
+        modal_image.src = "/uploads/" + filePath;
         image_modal.classList.remove("hidden");
         image_modal.classList.add("block");
         document.body.classList.add("overflow-hidden");
@@ -19,11 +19,12 @@
 
 
     function showVideo(filePath, mime) {
+        console.log(filePath, mime);
         const video = document.getElementById('modal-video');
         video.innerHTML = "";
         const video_modal = document.getElementById('video_modal');
         var source = document.createElement('source');
-        source.setAttribute('src', "/" + filePath);
+        source.setAttribute('src', "/uploads/" + filePath);
         source.setAttribute('type', mime);
         video.appendChild(source);
         video_modal.classList.remove("hidden");
@@ -98,11 +99,12 @@
                                             onclick="showVideo('{{ $file->path }}',
                             '{{ $file->mime }}')"
                                             class="w-24 h-24 rounded object-cover cursor-pointer">
-                                            <source src="{{ '/' . $file->path }}" type="{{ $file->mime }}">
+                                            <source src="{{ '/uploads/' . $file->path }}" type="{{ $file->mime }}">
                                             Your browser does not support the video tag.
                                         </video>
                                     @else
-                                        <img onclick="showImage('{{ $file->path }}')" src="{{ '/' . $file->path }}"
+                                        <img onclick="showImage('{{ $file->path }}')"
+                                            src="{{ '/uploads/' . $file->path }}"
                                             class="rounded
                             border-slate-200 border w-24 h-24 object-cover cursor-pointer"
                                             alt="Image" />

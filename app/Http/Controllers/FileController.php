@@ -32,13 +32,13 @@ class FileController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'files.*' => 'required|file|mimes:png,jpeg,jpg,mp4|max:2048',
+            'files.*' => 'required|file|mimes:png,jpeg,jpg,mp4,mov,avi',
         ]);
 
         if ($request->hasFile('files')) {
             foreach ($request->file('files') as $file) {
                 $filename = $file->getClientOriginalName();
-                $path = $file->storeAs('uploads', $filename, 'public');
+                $path = $file->storeAs('', $filename, 'minio');
 
                 File::create([
                     'name' => $filename,
@@ -61,10 +61,9 @@ class FileController extends Controller
 
         // Only delete the file from storage and the database if it exists
         try {
-            if (Storage::disk('local')->exists($file->path)) {
-                /*Storage::disk('local')->delete($file->path);*/
-            }
+
             $file->deleted_by = Auth::user()->email;
+            $file->save();
             $file->delete();
 
             return redirect()->route('entries.edit', $file->journal_entry_id)
@@ -77,13 +76,26 @@ class FileController extends Controller
 
     public function show(string $filename)
     {
-        $path = 'uploads/' . $filename;
-        if (!Storage::disk('public')->exists($path)) {
+        // Check if the file exists in the MinIO bucket
+        if (!Storage::disk('minio')->exists($filename)) {
             abort(404);
         }
 
-        return response()->file(storage_path('app/public/' . $path));
+        // Retrieve the file's contents from the MinIO bucket
+        $fileContent = Storage::disk('minio')->get($filename);
+
+        // Get the MIME type of the file
+        $mimeType = Storage::disk('minio')->mimeType($filename);
+
+        // Return the file as a response with the correct headers
+        return response()->stream(function () use ($fileContent) {
+            echo $fileContent;
+        }, 200, [
+            'Content-Type' => $mimeType,
+            'Content-Disposition' => 'inline; filename="' . basename($filename) . '"',
+        ]);
     }
+
 
 
 
