@@ -1,8 +1,8 @@
 <x-layout>
-    <main class="font-sans antialiased h-screen flex justify-center items-center flex-col">
-        <div class="max-w-md w-full">
-            <h1 class="text-2xl mb-4">Login</h1>
-            <form method="post" action={{ route('users.login') }} class="w-full">
+    <main class="font-sans antialiased h-screen flex justify-center items-center flex-col px-4 sm:px-6">
+        <div class="max-w-xs sm:max-w-md w-full">
+            <h1 class="text-xl sm:text-2xl mb-4">Login</h1>
+            <form method="post" action={{ route('users.login') }} class="w-full space-y-4">
                 @csrf
                 <label class="form-control w-full">
                     <div class="label">
